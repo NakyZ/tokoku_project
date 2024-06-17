@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"tokoku_project/config"
-
 	"tokoku_project/internal/controller"
 	"tokoku_project/internal/model"
 )
@@ -41,6 +40,7 @@ func main() {
 		_, err := fmt.Scanln(&inputMenu)
 		if err != nil {
 			fmt.Scanln(&temp)
+			fmt.Print("\033[H\033[2J") //cls
 			fmt.Println("Input salah, silahkan coba lagi")
 			continue
 		}
@@ -48,14 +48,16 @@ func main() {
 
 			data, err := uc.Login()
 			if err != nil {
-				//fmt.Println("Terjadi error pada saat login, error: ", err.Error())
+				fmt.Println("Terjadi error pada saat login, error: ", err.Error())
 				continue
 			}
 			var isLogin = true
 			var inputMenu2 int
 
 			for isLogin && data.IsAdmin {
-				fmt.Println("\nSelamat datang", data.Nama, ",")
+				fmt.Println("\n--------------------------------")
+				fmt.Println("Selamat datang", data.Nama, ",")
+				fmt.Println("----------------------------------")
 				fmt.Println("\nPilih menu")
 				fmt.Println("1. Tambah Barang")
 				fmt.Println("2. Edit Informasi Barang")
@@ -64,7 +66,8 @@ func main() {
 				fmt.Println("5. Tambah Pegawai")
 				fmt.Println("6. Tambah Customer")
 				fmt.Println("7. Kurangi Stok (Opsional)")
-				fmt.Println("9. Keluar")
+				fmt.Println("8. Kurangi Stok (Opsional)")
+				fmt.Println("\n99. Keluar")
 				fmt.Print("\nMasukkan input: ")
 				fmt.Scanln(&inputMenu2)
 
