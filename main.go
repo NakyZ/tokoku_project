@@ -17,12 +17,14 @@ func main() {
 		return
 	}
 
-	connection.AutoMigrate(&model.User{})
+	connection.AutoMigrate(&model.User{}, &model.Customer{}) 
 
 	var inputMenu int
 
 	um := model.NewUserModel(connection)
 	uc := controller.NewUserController(um)
+	cm := model.NewCustomerModel(connection)
+	cc := controller.NewCustomerController(cm)
 
 	// tu := models.NewTodoModel(connection)
 	// tc := controllers.NewTodoController(tu)
@@ -57,6 +59,9 @@ func main() {
 				fmt.Scanln(&inputMenu2)
 				if inputMenu2 == 9 {
 					isLogin = false
+				}
+				if inputMenu2 == 6 {
+					cc.Register(data.ID)
 				}
 				// } else if inputMenu2 == 1 {
 				// 	_, err := tc.AddTodo(data.ID)
