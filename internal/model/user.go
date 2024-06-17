@@ -32,3 +32,11 @@ func (um *UserModel) Login(username string, password string) (User, error) {
 	}
 	return result, nil
 }
+
+func (um *UserModel) Register(newUser User) (bool, error) {
+	err := um.db.Create(&newUser).Error
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
