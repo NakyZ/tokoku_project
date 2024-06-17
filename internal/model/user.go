@@ -7,9 +7,10 @@ import (
 type User struct {
 	gorm.Model
 	IsAdmin  bool
-	Username string `gorm:"type:varchar(50)"`
-	Password string `gorm:"type:varchar(50)"`
-	Nama     string `gorm:"type:varchar(50)"`
+	Username string   `gorm:"type:varchar(50)"`
+	Password string   `gorm:"type:varchar(50)"`
+	Nama     string   `gorm:"type:varchar(50)"`
+	Barangs  []Barang `gorm:"foreignKey:CreatedBy"`
 	// BirthDate time.Time `gorm:"type:date"`
 	// Todos     []Todo    `gorm:"foreignKey:Owner"`
 }
