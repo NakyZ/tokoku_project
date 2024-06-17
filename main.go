@@ -36,7 +36,7 @@ func main() {
 		if inputMenu == 1 {
 			data, err := uc.Login()
 			if err != nil {
-				fmt.Println("Terjadi error pada saat login, error: ", err.Error())
+				//fmt.Println("Terjadi error pada saat login, error: ", err.Error())
 				continue
 			}
 			var isLogin = true
@@ -49,9 +49,9 @@ func main() {
 				fmt.Println("2. Edit Informasi Barang")
 				fmt.Println("3. Restock Barang")
 				fmt.Println("4. Pembelian")
-				fmt.Println("5. Tambah Customer")
-				fmt.Println("6. Pembelian")
-				fmt.Println("7. Pembelian")
+				fmt.Println("5. Tambah Pegawai")
+				fmt.Println("6. Tambah Customer")
+				fmt.Println("7. Kurangi Stok (Opsional)")
 				fmt.Println("9. Keluar")
 				fmt.Print("Masukkan input: ")
 				fmt.Scanln(&inputMenu2)
@@ -73,5 +73,5 @@ func main() {
 		// }
 	}
 
-	fmt.Println("terima kasih")
+	fmt.Println("\nterima kasih")
 }
