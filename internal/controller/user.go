@@ -56,8 +56,8 @@ func (uc *UserController) Register() (model.User, error) {
 	newData.Nama = scanner.Text()
 	newData.IsAdmin = false
 	result, err := uc.model.Register(newData)
-	if err != nil && !result { 
-		return model.User{}, errors.New("Terjadi kesalahan saat melakukan register")
+	if err != nil && !result {
+		return model.User{}, errors.New("terjadi kesalahan saat melakukan register")
 	}
 	return newData, nil
 }
