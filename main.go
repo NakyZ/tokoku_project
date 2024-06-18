@@ -57,8 +57,7 @@ func main() {
 				fmt.Scanln(&inputMenu2)
 				if inputMenu2 == 9 {
 					isLogin = false
-				}
-				if inputMenu2 == 6 {
+				} else if inputMenu2 == 5 {
 					uc.Register()
 				}
 				// } else if inputMenu2 == 1 {
