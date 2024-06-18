@@ -74,9 +74,11 @@ func main() {
 				switch inputMenu2 {
 				case 1:
 					bc.TambahBarang(data.ID)
+        case 5:
+          uc.Register()
 				case 99:
 					isLogin = false
-				default:
+        default :
 					fmt.Print("\033[H\033[2J") //cls
 					fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
 				}
@@ -91,6 +93,31 @@ func main() {
 				// 	fmt.Print("\033[H\033[2J") //cls
 				// 	fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
 				// }
+				// } else if inputMenu2 == 1 {
+				// 	_, err := tc.AddTodo(data.ID)
+				// 	if err != nil {
+				// 		fmt.Println("error ketika menambahkan aktivitas")
+				// 		return
+				// 	}
+				// 	fmt.Println("berhasil menambahkan aktivitas")
+				// }
+			}
+			for isLogin && !data.IsAdmin {
+				fmt.Println("\nSelamat datang", data.Nama, ",")
+				fmt.Println("\nPilih menu")
+				fmt.Println("1. Tambah Barang")
+				fmt.Println("2. Edit Informasi Barang")
+				fmt.Println("3. Restock Barang")
+				fmt.Println("4. Pembelian")
+				fmt.Println("6. Tambah Customer")
+				fmt.Println("7. Kurangi Stok (Opsional)")
+				fmt.Println("9. Keluar")
+				fmt.Print("Masukkan input: ")
+				fmt.Scanln(&inputMenu2)
+				if inputMenu2 == 9 {
+					isLogin = false
+				}
+				
 				// } else if inputMenu2 == 1 {
 				// 	_, err := tc.AddTodo(data.ID)
 				// 	if err != nil {

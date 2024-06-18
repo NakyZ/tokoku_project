@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"tokoku_project/internal/model"
 )
 
@@ -37,4 +39,25 @@ func (uc *UserController) Login() (model.User, error) {
 
 	fmt.Print("Login Berhasil")
 	return result, nil
+}
+
+func (uc *UserController) Register() (model.User, error) {
+	var newData model.User
+	scanner := bufio.NewScanner(os.Stdin)
+
+	fmt.Print("Masukkan username Pegawai	:")
+	scanner.Scan()
+	newData.Username = scanner.Text()
+	fmt.Print("Masukkan Password	:")
+	scanner.Scan()
+	newData.Password = scanner.Text()
+	fmt.Print("Masukkan Nama pegawai	:")
+	scanner.Scan()
+	newData.Nama = scanner.Text()
+	newData.IsAdmin = false
+	result, err := uc.model.Register(newData)
+	if err != nil && !result { 
+		return model.User{}, errors.New("Terjadi kesalahan saat melakukan register")
+	}
+	return newData, nil
 }
