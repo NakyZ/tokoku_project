@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"text/tabwriter"
 	"tokoku_project/internal/model"
 )
 
@@ -85,4 +86,54 @@ func (bc *BarangController) TambahBarang(userID uint) (model.Barang, error) {
 
 	fmt.Println(newData.NamaBarang, " berhasil ditambahkan ke Daftar Barang")
 	return newData, nil
+}
+
+func (bc *BarangController) GetBarang() int {
+	var nextMenu int
+	result, err := bc.model.GetBarang()
+
+	if err != nil {
+		fmt.Println("Terjadi ERROR")
+	} else {
+		fmt.Print("\033[H\033[2J") //cls
+
+		fmt.Println("--------------")
+		fmt.Println("Daftar Barang")
+		fmt.Println("--------------")
+
+		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "|id\t|Nama Barang\t|Jenis Barang\t|Harga\t|Stok\t|")
+		fmt.Fprintln(w, "\t\t\t\t")
+		for _, databarang := range result {
+			fmt.Fprintln(w, "|", databarang.ID, "\t|", databarang.NamaBarang, "\t|", databarang.JenisBarang, "\t|", databarang.Harga, "\t|", databarang.Stock, "\t|")
+		}
+		w.Flush()
+	}
+
+	fmt.Println("\nPilih Menu :")
+	fmt.Println("[1] RESTOCK BARANG")
+	fmt.Println("[99] KEMBALI KE MENU UTAMA")
+	for {
+		var temp string
+		fmt.Print("\nMasukkan Input Anda : ")
+		_, err := fmt.Scanln(&nextMenu)
+		if err != nil {
+			fmt.Scanln(&temp)
+			fmt.Println("- Masukkan input yang valid")
+			continue
+		}
+		switch nextMenu {
+		case 1:
+			fmt.Print("\033[H\033[2J") //cls
+			return nextMenu
+		case 99:
+			fmt.Print("\033[H\033[2J") //cls
+			return nextMenu
+		default:
+			fmt.Println("- Masukkan input yang valid")
+		}
+
+	}
+
 }

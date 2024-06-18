@@ -56,6 +56,7 @@ func main() {
 			}
 			var isLogin = true
 			var inputMenu2 int
+			var inputSubMenu int
 
 			for isLogin && data.IsAdmin {
 				fmt.Println("----------------------------------")
@@ -64,14 +65,16 @@ func main() {
 				fmt.Println("Selamat datang", data.Nama, ",")
 				fmt.Println("\nPilih menu")
 				fmt.Println("1. Tambah Barang")
-				fmt.Println("2. Edit Informasi Barang")
-				fmt.Println("3. Restock Barang")
-				fmt.Println("4. Pembelian")
-				fmt.Println("5. Tambah Pegawai")
-				fmt.Println("6. Tambah Customer")
-				fmt.Println("7. Kurangi Stok (Opsional)")
+				fmt.Println("2. Tampilkan Daftar Barang")
+				fmt.Println("3. Edit Informasi Barang")
+				fmt.Println("4. Restock Barang")
+				fmt.Println("5. Pembelian")
+				fmt.Println("6. Tambah Pegawai")
+				fmt.Println("7. Tambah Customer")
+				fmt.Println("8. Kurangi Stok (Opsional)")
 				fmt.Println("\n99. Keluar")
 				fmt.Print("\nMasukkan input: ")
+
 				_, err := fmt.Scanln(&inputMenu2)
 				if err != nil {
 					fmt.Scanln(&temp)
@@ -83,6 +86,11 @@ func main() {
 				switch inputMenu2 {
 				case 1:
 					bc.TambahBarang(data.ID)
+				case 2:
+					inputSubMenu = bc.GetBarang()
+					if inputSubMenu == 1 {
+						fmt.Println("Ini Fitur Restock tapi belum selesai dibuat")
+					}
 				case 5:
 					uc.Register()
 				case 99:
@@ -130,6 +138,8 @@ func main() {
 				switch inputMenu2 {
 				case 1:
 					bc.TambahBarang(data.ID)
+				case 2:
+					bc.GetBarang()
 				case 99:
 					fmt.Print("\033[H\033[2J") //cls
 					isLogin = false
