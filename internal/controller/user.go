@@ -37,21 +37,24 @@ func (uc *UserController) Login() (model.User, error) {
 
 	fmt.Print("\033[H\033[2J") //cls
 
-	fmt.Print("Login Berhasil")
+	fmt.Println("Login Berhasil")
 	return result, nil
 }
 
 func (uc *UserController) Register() (model.User, error) {
 	var newData model.User
 	scanner := bufio.NewScanner(os.Stdin)
-
-	fmt.Print("Masukkan username Pegawai	:")
+	fmt.Print("\033[H\033[2J") //cls
+	fmt.Println("----------------------------------")
+	fmt.Println("Tambah Pegawai")
+	fmt.Println("----------------------------------")
+	fmt.Print("\nMasukkan username Pegawai : ")
 	scanner.Scan()
 	newData.Username = scanner.Text()
-	fmt.Print("Masukkan Password	:")
+	fmt.Print("Masukkan Password : ")
 	scanner.Scan()
 	newData.Password = scanner.Text()
-	fmt.Print("Masukkan Nama pegawai	:")
+	fmt.Print("Masukkan Nama Pegawai : ")
 	scanner.Scan()
 	newData.Nama = scanner.Text()
 	newData.IsAdmin = false
@@ -59,5 +62,7 @@ func (uc *UserController) Register() (model.User, error) {
 	if err != nil && !result {
 		return model.User{}, errors.New("terjadi kesalahan saat melakukan register")
 	}
+	fmt.Print("\033[H\033[2J") //cls
+	fmt.Println(newData.Nama, "berhasil ditambahkan ke Daftar Pegawai")
 	return newData, nil
 }
