@@ -71,16 +71,26 @@ func main() {
 				fmt.Print("\nMasukkan input: ")
 				fmt.Scanln(&inputMenu2)
 
-				if inputMenu2 == 1 {
+				switch inputMenu2 {
+				case 1:
 					bc.TambahBarang(data.ID)
-				}
-				if inputMenu2 == 9 {
+				case 99:
 					isLogin = false
-				}
-				if inputMenu2 != 1 || inputMenu2 != 9 {
+				default:
 					fmt.Print("\033[H\033[2J") //cls
 					fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
 				}
+
+				// if inputMenu2 == 1 {
+				// 	bc.TambahBarang(data.ID)
+				// }
+				// if inputMenu2 == 9 {
+				// 	isLogin = false
+				// }
+				// if inputMenu2 != 1 || inputMenu2 != 9 {
+				// 	fmt.Print("\033[H\033[2J") //cls
+				// 	fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
+				// }
 				// } else if inputMenu2 == 1 {
 				// 	_, err := tc.AddTodo(data.ID)
 				// 	if err != nil {
