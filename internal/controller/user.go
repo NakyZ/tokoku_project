@@ -18,7 +18,13 @@ func NewUserController(m *model.UserModel) *UserController {
 
 func (uc *UserController) Login() (model.User, error) {
 	var username, password string
-	fmt.Print("\nMasukkan username : ")
+
+	fmt.Print("\033[H\033[2J") //cls
+
+	fmt.Print("----------------------")
+	fmt.Print("\nLogin\n")
+	fmt.Print("----------------------")
+	fmt.Print("\n\nMasukkan username : ")
 	fmt.Scanln(&username)
 	fmt.Print("Masukkan password : ")
 	fmt.Scanln(&password)
@@ -26,5 +32,9 @@ func (uc *UserController) Login() (model.User, error) {
 	if err != nil {
 		return model.User{}, errors.New("kombinasi username & password tidak ditemukan")
 	}
+
+	fmt.Print("\033[H\033[2J") //cls
+
+	fmt.Print("Login Berhasil")
 	return result, nil
 }
