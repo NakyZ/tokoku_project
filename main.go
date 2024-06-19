@@ -28,9 +28,6 @@ func main() {
 	bm := model.NewBarangModel(connection)
 	bc := controller.NewBarangController(bm)
 
-	// tu := models.NewTodoModel(connection)
-	// tc := controllers.NewTodoController(tu)
-
 	for inputMenu != 9 {
 		var temp string
 		fmt.Println("----------------------------------")
@@ -57,7 +54,7 @@ func main() {
 			var isLogin = true
 			var inputMenu2 int
 			var inputSubMenu int
-
+			//------------------------------ LOGIN ADMIN -----------------------------------------//
 			for isLogin && data.IsAdmin {
 				fmt.Println("----------------------------------")
 				fmt.Println("Menu Utama Admin")
@@ -91,6 +88,9 @@ func main() {
 					if inputSubMenu == 1 {
 						fmt.Println("Ini Fitur Restock tapi belum selesai dibuat")
 					}
+				case 3:
+					fmt.Print("\033[H\033[2J") //cls
+					bc.UpdateInfoBarang(data.ID)
 				case 5:
 					uc.Register()
 				case 99:
@@ -98,28 +98,12 @@ func main() {
 					isLogin = false
 				default:
 					fmt.Print("\033[H\033[2J") //cls
-					fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
+					fmt.Println("Input anda salah atau fitur yang dipilih belum tersedia")
 				}
-
-				// if inputMenu2 == 1 {
-				// 	bc.TambahBarang(data.ID)
-				// }
-				// if inputMenu2 == 9 {
-				// 	isLogin = false
-				// }
-				// if inputMenu2 != 1 || inputMenu2 != 9 {
-				// 	fmt.Print("\033[H\033[2J") //cls
-				// 	fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
-				// }
-				// } else if inputMenu2 == 1 {
-				// 	_, err := tc.AddTodo(data.ID)
-				// 	if err != nil {
-				// 		fmt.Println("error ketika menambahkan aktivitas")
-				// 		return
-				// 	}
-				// 	fmt.Println("berhasil menambahkan aktivitas")
-				// }
 			}
+			//------------------------------ CLOSING LOGIN ADMIN -----------------------------------------//
+
+			//------------------------------ LOGIN PEGAWAI -----------------------------------------//
 			for isLogin && !data.IsAdmin {
 				fmt.Println("----------------------------------")
 				fmt.Println("Menu Utama Pegawai")
@@ -148,19 +132,10 @@ func main() {
 					fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
 				}
 
-				// } else if inputMenu2 == 1 {
-				// 	_, err := tc.AddTodo(data.ID)
-				// 	if err != nil {
-				// 		fmt.Println("error ketika menambahkan aktivitas")
-				// 		return
-				// 	}
-				// 	fmt.Println("berhasil menambahkan aktivitas")
-				// }
 			}
+			//------------------------------ CLOSING LOGIN PEGAWAI -----------------------------------------//
 		}
-		// } else if inputMenu == 2 {
-		// 	uc.Register()
-		// }
+
 	}
 
 	fmt.Println("\nterima kasih")
