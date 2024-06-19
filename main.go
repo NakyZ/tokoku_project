@@ -59,7 +59,6 @@ func main() {
 			}
 			var isLogin = true
 			var inputMenu2 int
-			var inputSubMenu int
 			//------------------------------ LOGIN ADMIN -----------------------------------------//
 			for isLogin && data.IsAdmin {
 				fmt.Println("----------------------------------")
@@ -90,10 +89,7 @@ func main() {
 				case 1:
 					bc.TambahBarang(data.ID)
 				case 2:
-					inputSubMenu = bc.GetBarang()
-					if inputSubMenu == 1 {
-						fmt.Println("Ini Fitur Restock tapi belum selesai dibuat")
-					}
+					bc.GetBarang()
 				case 3:
 					fmt.Print("\033[H\033[2J") //cls
 					bc.UpdateInfoBarang(data.ID)
@@ -121,9 +117,10 @@ func main() {
 				fmt.Println("\nSelamat datang", data.Nama, ",")
 				fmt.Println("\nPilih menu")
 				fmt.Println("1. Tambah Barang")
-				fmt.Println("2. Edit Informasi Barang")
-				fmt.Println("3. Restock Barang")
-				fmt.Println("4. Pembelian")
+				fmt.Println("2. Tampilkan Daftar Barang")
+				fmt.Println("3. Edit Informasi Barang")
+				fmt.Println("4. Restock Barang")
+				fmt.Println("5. Pembelian")
 				fmt.Println("6. Tambah Customer")
 				fmt.Println("7. Kurangi Stok (Opsional)")
 				fmt.Println("99. Keluar")
@@ -134,12 +131,18 @@ func main() {
 					bc.TambahBarang(data.ID)
 				case 2:
 					bc.GetBarang()
+				case 3:
+					fmt.Print("\033[H\033[2J") //cls
+					bc.UpdateInfoBarang(data.ID)
+				case 4:
+					fmt.Print("\033[H\033[2J") //cls
+					tc.RestockBarang(bc, dtc, data.ID)
 				case 99:
 					fmt.Print("\033[H\033[2J") //cls
 					isLogin = false
 				default:
 					fmt.Print("\033[H\033[2J") //cls
-					fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
+					fmt.Println("Input anda salah atau fitur yang dipilih belum tersedia")
 				}
 
 			}

@@ -88,7 +88,7 @@ func (bc *BarangController) TambahBarang(userID uint) (model.Barang, error) {
 	return newData, nil
 }
 
-func (bc *BarangController) GetBarang() int {
+func (bc *BarangController) GetBarang() {
 	var nextMenu int
 
 	result, err := bc.model.GetBarang()
@@ -113,7 +113,6 @@ func (bc *BarangController) GetBarang() int {
 	}
 
 	fmt.Println("\nPilih Menu :")
-	fmt.Println("[1] RESTOCK BARANG")
 	fmt.Println("[99] KEMBALI KE MENU UTAMA")
 	for {
 		var temp string
@@ -125,12 +124,9 @@ func (bc *BarangController) GetBarang() int {
 			continue
 		}
 		switch nextMenu {
-		case 1:
-			fmt.Print("\033[H\033[2J") //cls
-			return nextMenu
 		case 99:
 			fmt.Print("\033[H\033[2J") //cls
-			return nextMenu
+			return
 		default:
 			fmt.Println("- Masukkan input yang valid")
 		}

@@ -124,6 +124,12 @@ func (tc *TransaksiController) RestockBarang(bc *BarangController, dtc *DetailTr
 		newDataTrx.TotalQty = newDataDTrx.Qty
 		newDataTrx.TotalHarga = newDataDTrx.TotalHarga
 
+		newDataTrx, err = tc.model.UpdateTransaksi(newDataTrx)
+		if err != nil {
+			fmt.Println("terjadi masalah ketika update data Restock")
+			return
+		}
+
 		fmt.Print("\033[H\033[2J") //cls
 
 		fmt.Println(newData.NamaBarang, "berhasil Restock sebanyak", TambahBarang, "unit")
