@@ -4,11 +4,12 @@ import "gorm.io/gorm"
 
 type Barang struct {
 	gorm.Model
-	NamaBarang  string `gorm:"type:varchar(50)"`
-	JenisBarang string `gorm:"type:varchar(50)"`
-	Harga       uint
-	Stock       uint
-	CreatedBy   uint
+	NamaBarang       string `gorm:"type:varchar(50)"`
+	JenisBarang      string `gorm:"type:varchar(50)"`
+	Harga            uint
+	Stock            uint
+	CreatedBy        uint
+	DetailTransaksis []DetailTransaksi `gorm:"foreignKey:IdBarang"`
 	// Todos     []Todo    `gorm:"foreignKey:Owner"`
 }
 

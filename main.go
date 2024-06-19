@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	connection.AutoMigrate(&model.User{}, &model.Barang{})
+	connection.AutoMigrate(&model.User{}, &model.Barang{}, &model.Transaksi{}, &model.DetailTransaksi{})
 
 	var inputMenu int
 
@@ -27,6 +27,12 @@ func main() {
 
 	bm := model.NewBarangModel(connection)
 	bc := controller.NewBarangController(bm)
+
+	tm := model.NewTransaksiModel(connection)
+	tc := controller.NewTransaksiController(tm)
+
+	dtm := model.NewDetailTransaksiModel(connection)
+	dtc := controller.NewDetailTransaksiController(dtm)
 
 	for inputMenu != 9 {
 		var temp string
@@ -91,7 +97,11 @@ func main() {
 				case 3:
 					fmt.Print("\033[H\033[2J") //cls
 					bc.UpdateInfoBarang(data.ID)
+				case 4:
+					fmt.Print("\033[H\033[2J") //cls
+					tc.RestockBarang(bc, dtc, data.ID)
 				case 5:
+					fmt.Print("\033[H\033[2J") //cls
 					uc.Register()
 				case 99:
 					fmt.Print("\033[H\033[2J") //cls
