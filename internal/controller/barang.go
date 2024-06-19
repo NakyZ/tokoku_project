@@ -209,4 +209,14 @@ func (bc *BarangController) UpdateInfoBarang() int {
 			fmt.Println("Input Salah, coba lagi")
 		}
 	}
+	if confirm == 1 {
+		break
+	} else if confirm == 2 {
+		fmt.Print("\033[H\033[2J") //cls
+		continue
+	} else if confirm == 3 {
+		fmt.Print("\033[H\033[2J") //cls
+		fmt.Println("Barang Batal Ditambahkan")
+		return model.Barang{}, nil
+	}
 }
