@@ -90,6 +90,7 @@ func (bc *BarangController) TambahBarang(userID uint) (model.Barang, error) {
 
 func (bc *BarangController) GetBarang() int {
 	var nextMenu int
+
 	result, err := bc.model.GetBarang()
 
 	if err != nil {
@@ -103,10 +104,10 @@ func (bc *BarangController) GetBarang() int {
 
 		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 		//fmt.Fprintln(w, "----------------------------------------------------")
-		fmt.Fprintln(w, "|id\t|Nama Barang\t|Jenis Barang\t|Harga\t|Stok\t|")
-		fmt.Fprintln(w, "\t\t\t\t")
+		fmt.Fprintln(w, "| id\t| Nama Barang\t| Jenis Barang\t| Harga\t| Stok\t|\t")
+		fmt.Fprintln(w, "+\t+\t+\t+\t+\t+\t")
 		for _, databarang := range result {
-			fmt.Fprintln(w, "|", databarang.ID, "\t|", databarang.NamaBarang, "\t|", databarang.JenisBarang, "\t|", databarang.Harga, "\t|", databarang.Stock, "\t|")
+			fmt.Fprintln(w, "|", databarang.ID, "\t|", databarang.NamaBarang, "\t|", databarang.JenisBarang, "\t|", databarang.Harga, "\t|", databarang.Stock, "\t|\t")
 		}
 		w.Flush()
 	}
@@ -136,4 +137,76 @@ func (bc *BarangController) GetBarang() int {
 
 	}
 
+}
+
+func (bc *BarangController) UpdateInfoBarang() int {
+	var nextMenu int
+	var newData model.Barang
+
+	fmt.Println("-----------------")
+	fmt.Println("Edit Data Barang")
+	fmt.Println("-----------------")
+
+	for {
+		var temp string
+		fmt.Print("\nMasukkan ID barang : ")
+		_, err := fmt.Scanln(&newData.ID)
+		if err != nil {
+			fmt.Scanln(&temp)
+			fmt.Println("- Masukkan input yang valid")
+			continue
+		} else {
+			break
+		}
+
+	}
+
+	newData, err := bc.model.GetSatuBarang(newData.ID)
+
+	if err != nil {
+		fmt.Println("Id yang anda masukkan tidak ada")
+		return nextMenu
+	}
+
+	fmt.Println("ID barang ditemukan dengan data sebagai berikut :")
+	fmt.Println("\nNama Barang : ", newData.NamaBarang)
+	fmt.Println("Jenis Barang : ", newData.JenisBarang)
+	fmt.Println("Harga Barang : ", newData.Harga)
+
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print("\nMasukkan Nama Baru Barang : ")
+	scanner.Scan() // use `for scanner.Scan()` to keep reading
+	newData.NamaBarang = scanner.Text()
+
+	fmt.Print("Masukkan Jenis Baru Barang : ")
+	scanner.Scan() // use `for scanner.Scan()` to keep reading
+	newData.JenisBarang = scanner.Text()
+
+	for {
+		var temp string
+		fmt.Print("Masukkan Harga Baru Barang : ")
+		_, err := fmt.Scanln(&newData.Harga)
+		if err != nil {
+			fmt.Scanln(&temp)
+			fmt.Println("-Masukkan angka yang valid")
+			continue
+		} else {
+			break
+		}
+	}
+
+	fmt.Println("\nNama Barang : ", newData.NamaBarang)
+	fmt.Println("Jenis Barang : ", newData.JenisBarang)
+	fmt.Println("Harga Barang : ", newData.Harga)
+	for {
+		var confirm int
+		fmt.Println("\nApakah data baru barang sudah benar ?\n[1] YA\n[2] EDIT ULANG DATA BARANG\n[3] BATAL EDIT BARANG")
+		fmt.Print("\nInput anda : ")
+		fmt.Scanln(&confirm)
+		if confirm > 0 || confirm < 4 {
+			break
+		} else {
+			fmt.Println("Input Salah, coba lagi")
+		}
+	}
 }

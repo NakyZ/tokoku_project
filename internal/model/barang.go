@@ -38,3 +38,21 @@ func (bm *BarangModel) GetBarang() ([]Barang, error) {
 	}
 	return result, nil
 }
+
+func (bm *BarangModel) GetSatuBarang(id uint) (Barang, error) {
+	var result Barang
+	err := bm.db.First(&result).Error
+	if err != nil || bm.db.First(&result).RowsAffected == 0 {
+		return Barang{}, err
+	}
+	return result, nil
+}
+
+func (bm *BarangModel) UpdateInfoBarang(id uint) (Barang, error) {
+	var result Barang
+	err := bm.db.Save(&result).Error
+	if err != nil {
+		return Barang{}, err
+	}
+	return result, nil
+}
