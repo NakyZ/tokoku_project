@@ -139,10 +139,10 @@ func (bc *BarangController) GetBarang() int {
 
 }
 
-func (bc *BarangController) UpdateInfoBarang() int {
-	var nextMenu int
-	var newData model.Barang
+func (bc *BarangController) UpdateInfoBarang(idUser uint) {
 
+	var newData model.Barang
+	var idInput int
 	fmt.Println("-----------------")
 	fmt.Println("Edit Data Barang")
 	fmt.Println("-----------------")
@@ -150,7 +150,7 @@ func (bc *BarangController) UpdateInfoBarang() int {
 	for {
 		var temp string
 		fmt.Print("\nMasukkan ID barang : ")
-		_, err := fmt.Scanln(&newData.ID)
+		_, err := fmt.Scanln(&idInput)
 		if err != nil {
 			fmt.Scanln(&temp)
 			fmt.Println("- Masukkan input yang valid")
@@ -161,11 +161,11 @@ func (bc *BarangController) UpdateInfoBarang() int {
 
 	}
 
-	newData, err := bc.model.GetSatuBarang(newData.ID)
+	newData, err := bc.model.GetSatuBarang(idInput)
 
 	if err != nil {
 		fmt.Println("Id yang anda masukkan tidak ada")
-		return nextMenu
+		return
 	}
 
 	fmt.Println("ID barang ditemukan dengan data sebagai berikut :")
@@ -188,35 +188,50 @@ func (bc *BarangController) UpdateInfoBarang() int {
 		_, err := fmt.Scanln(&newData.Harga)
 		if err != nil {
 			fmt.Scanln(&temp)
-			fmt.Println("-Masukkan angka yang valid")
+			fmt.Println("- Masukkan angka yang valid")
 			continue
 		} else {
 			break
 		}
 	}
 
-	fmt.Println("\nNama Barang : ", newData.NamaBarang)
-	fmt.Println("Jenis Barang : ", newData.JenisBarang)
-	fmt.Println("Harga Barang : ", newData.Harga)
+	fmt.Println("\nNama Baru Barang : ", newData.NamaBarang)
+	fmt.Println("Jenis Baru Barang : ", newData.JenisBarang)
+	fmt.Println("Harga Baru Barang : ", newData.Harga)
+
+	var confirm int
 	for {
-		var confirm int
-		fmt.Println("\nApakah data baru barang sudah benar ?\n[1] YA\n[2] EDIT ULANG DATA BARANG\n[3] BATAL EDIT BARANG")
+		fmt.Println("\nApakah data barang baru barang sudah benar ?\n[1] YA\n[2] BATAL UPDATE BARANG")
 		fmt.Print("\nInput anda : ")
-		fmt.Scanln(&confirm)
-		if confirm > 0 || confirm < 4 {
+		_, err := fmt.Scanln(&confirm)
+		if confirm > 0 || confirm < 3 {
 			break
+		} else if err != nil {
+			var temp string
+			fmt.Scanln(&temp)
+			fmt.Println("- Masukkan input yang valid")
+			continue
 		} else {
-			fmt.Println("Input Salah, coba lagi")
+			fmt.Println("- Masukkan input yang valid")
+			continue
 		}
 	}
 	if confirm == 1 {
-		break
-	} else if confirm == 2 {
+		newData.CreatedBy = idUser
+		newData, err := bc.model.UpdateInfoBarang(newData)
+		if err != nil {
+			fmt.Println("terjadi masalah ketika update data barang")
+			return
+		}
+
 		fmt.Print("\033[H\033[2J") //cls
-		continue
-	} else if confirm == 3 {
+
+		fmt.Println(newData.NamaBarang, " berhasil ditambahkan ke Daftar Barang")
+
+	} else {
 		fmt.Print("\033[H\033[2J") //cls
-		fmt.Println("Barang Batal Ditambahkan")
-		return model.Barang{}, nil
+		fmt.Println("Edit data barang dibatalkan")
+		return
 	}
+
 }

@@ -90,7 +90,7 @@ func main() {
 					}
 				case 3:
 					fmt.Print("\033[H\033[2J") //cls
-					fmt.Println("Ini fitur Edit Informasi Barang, namun fiturnya belum dibuat")
+					bc.UpdateInfoBarang(data.ID)
 				case 5:
 					uc.Register()
 				case 99:
