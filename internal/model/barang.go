@@ -29,3 +29,12 @@ func (bm *BarangModel) TambahBarang(newBarang Barang) (bool, error) {
 	}
 	return true, nil
 }
+
+func (bm *BarangModel) GetBarang() ([]Barang, error) {
+	var result []Barang
+	err := bm.db.Find(&result).Error
+	if err != nil {
+		return []Barang{}, err
+	}
+	return result, nil
+}
