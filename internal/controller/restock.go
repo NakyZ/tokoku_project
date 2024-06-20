@@ -21,23 +21,16 @@ func NewRestockController(m *model.RestockModel) *RestockController {
 func (rc *RestockController) RestockBarang(userID uint) (model.Restock, error) {
 	var newData model.Restock
 	var confirm int
+
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-		fmt.Print("\nMasukkan Nama Restock Barang : ")
+		fmt.Print("Masukkan Stock  : ")
 		scanner.Scan() 
-		newData.RestockBarang = scanner.Text()
+		fmt.Scanln(&newData.Restock)
 
-		fmt.Print("Masukkan Jenis Restock Barang : ")
-		scanner.Scan() 
-		newData.RestockJenisBarang = scanner.Text()
+		fmt.Println("Restock Barang : ", newData.Restock)
 
-		fmt.Print("Masukkan Harga Barang : ")
-		fmt.Scanln(&newData.Harga)
-
-		fmt.Println("\nNama Barang : ", newData.RestockBarang)
-		fmt.Println("Jenis Barang : ", newData.RestockJenisBarang)
-		fmt.Println("Harga Barang : ", newData.Harga)
 		for {
 			fmt.Println("Apakah data restock yang ingin ditambahkan sudah benar ?\n[1] YA\n[2] EDIT ULANG DATA RESTOCK\n[3] BATAL RESTOCK BARANG")
 			fmt.Println("Input anda : ")
@@ -59,7 +52,7 @@ func (rc *RestockController) RestockBarang(userID uint) (model.Restock, error) {
 		}
 	}
 
-	newData.CreatedBy = userID
+	newData.Restock = userID
 
 	result, err := rc.model.RestockBarang(newData)
 	if err != nil && !result {
@@ -68,6 +61,6 @@ func (rc *RestockController) RestockBarang(userID uint) (model.Restock, error) {
 
 	fmt.Print("\033[H\033[2J") //cls
 
-	fmt.Print(newData.RestockBarang, " Restock berhasil ditambahkan ke Daftar Barang")
+	fmt.Print(newData.Restock, " Restock berhasil ditambahkan ke Daftar Stock")
 	return newData, nil
 }

@@ -4,11 +4,7 @@ import "gorm.io/gorm"
 
 type Restock struct {
 	gorm.Model
-	RestockBarang  string `gorm:"type:varchar(50)"`
-	RestockJenisBarang string `gorm:"type:varchar(50)"`
-	Harga       uint
-	Stock       uint
-	CreatedBy   uint
+	Restock       uint
 }
 
 type RestockModel struct {

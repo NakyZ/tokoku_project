@@ -35,9 +35,13 @@ func (bc *BarangController) TambahBarang(userID uint) (model.Barang, error) {
 		fmt.Print("Masukkan Harga Barang : ")
 		fmt.Scanln(&newData.Harga)
 
+		fmt.Print("Masukkan Stock Barang : ")
+		fmt.Scanln(&newData.Stock)
+
 		fmt.Println("\nNama Barang : ", newData.NamaBarang)
 		fmt.Println("Jenis Barang : ", newData.JenisBarang)
 		fmt.Println("Harga Barang : ", newData.Harga)
+		fmt.Println("Stock Barang : ", newData.Stock)
 		for {
 			fmt.Println("\nApakah data barang yang ingin ditambahkan sudah benar ?\n[1] YA\n[2] EDIT ULANG DATA BARANG\n[3] BATAL TAMBAH BARANG")
 			fmt.Println("Input anda : ")

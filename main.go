@@ -77,12 +77,13 @@ func main() {
 				switch inputMenu2 {
 				case 1:
 					bc.TambahBarang(data.ID)
+				case 3:
+					rc.RestockBarang(data.ID)
         case 5:
           uc.Register()
 				case 99:
 					isLogin = false
-				case 3:
-					rc.RestockBarang(data.ID)
+				
 
         default :
 					fmt.Print("\033[H\033[2J") //cls
@@ -123,7 +124,7 @@ func main() {
 				if inputMenu2 == 9 {
 					isLogin = false
 				}else if inputMenu2 == 3 {
-					isLogin = false
+					uc.Register()
 				}
 				
 				// } else if inputMenu2 == 1 {
