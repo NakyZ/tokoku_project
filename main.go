@@ -98,8 +98,11 @@ func main() {
 					tc.RestockBarang(data.ID)
 				case 5:
 					fmt.Print("\033[H\033[2J") //cls
-					uc.Register()
+					tc.Pembelian(data.ID)
 				case 6:
+					fmt.Print("\033[H\033[2J") //cls
+					uc.Register()
+				case 7:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
 				case 99:

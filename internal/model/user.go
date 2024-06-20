@@ -13,7 +13,7 @@ type User struct {
 	Nama       string      `gorm:"type:varchar(50)"`
 	Barangs    []Barang    `gorm:"foreignKey:CreatedBy"`
 	Transaksis []Transaksi `gorm:"foreignKey:IdUser"`
-  Customers []Customer `gorm:"foreignKey:CreatedBy"`
+	Customers  []Customer  `gorm:"foreignKey:CreatedBy"`
 
 	// BirthDate time.Time `gorm:"type:date"`
 	// Todos     []Todo    `gorm:"foreignKey:Owner"`

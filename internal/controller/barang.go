@@ -23,6 +23,7 @@ func (bc *BarangController) TambahBarang(userID uint) (model.Barang, error) {
 	var newData model.Barang
 	var confirm int
 	scanner := bufio.NewScanner(os.Stdin)
+
 	fmt.Print("\033[H\033[2J") //cls
 	for {
 

@@ -4,10 +4,11 @@ import "gorm.io/gorm"
 
 type Customer struct {
 	gorm.Model
-	Email     string `gorm:"type:varchar(50)"`
-	Nama      string `gorm:"type:varchar(50)"`
-	Phone     string `gorm:"type:varchar(50)"`
-	CreatedBy uint
+	Email      string `gorm:"type:varchar(50)"`
+	Nama       string `gorm:"type:varchar(50)"`
+	Phone      string `gorm:"type:varchar(50)"`
+	CreatedBy  uint
+	Transaksis []Transaksi `gorm:"foreignKey:IdCustomer"`
 	// BirthDate time.Time `gorm:"type:date"`
 	// Todos     []Todo    `gorm:"foreignKey:Owner"`
 }

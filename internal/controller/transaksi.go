@@ -2,8 +2,16 @@ package controller
 
 import (
 	"fmt"
+	"os"
+	"text/tabwriter"
 	"tokoku_project/internal/model"
 )
+
+type Keranjang struct {
+	BarangDibeli []model.Barang
+	JumlahBeli   []int
+	TotalHarga   int
+}
 
 type TransaksiController struct {
 	model *model.TransaksiModel
@@ -131,13 +139,13 @@ func (tc *TransaksiController) RestockBarang(idUser uint) {
 	}
 }
 
-func (tc *TransaksiController) Pembelian(cc *CustomerController, bc *BarangController, dtc *DetailTransaksiController, idUser uint) {
+func (tc *TransaksiController) Pembelian(idUser uint) {
 
-	var Keranjang []model.Barang
+	var Keranjang Keranjang
 	var DataBarang model.Barang
 	var DataCustomer model.Customer
-	var newDataTrx model.Transaksi
-	var newDataDTrx model.DetailTransaksi
+	var DataTRX model.Transaksi
+	var DetailTRX model.DetailTransaksi
 
 	var idInput, JumlahBeli int
 	fmt.Println("-----------------")
@@ -159,18 +167,56 @@ func (tc *TransaksiController) Pembelian(cc *CustomerController, bc *BarangContr
 
 	}
 
-	DataCustomer, err := cc.model.GetSatuCustomer(idInput)
+	DataCustomer, err := tc.model.GetSatuCustomer(idInput)
 
 	if err != nil {
 		fmt.Println("Id yang anda masukkan tidak ada")
 		return
 	}
-	fmt.Println("ID Customer ditemukan dengan data sebagai berikut :")
-	fmt.Println("\nNama Customer : ", DataCustomer.Nama)
-	fmt.Println("Email Customer : ", DataCustomer.Email)
-	fmt.Println("No HP Customer : ", DataCustomer.Phone)
+	// fmt.Println("ID Customer ditemukan dengan data sebagai berikut :")
+	// fmt.Println("\nNama Customer : ", DataCustomer.Nama)
+	// fmt.Println("Email Customer : ", DataCustomer.Email)
+	// fmt.Println("No HP Customer : ", DataCustomer.Phone)
 	//GET DATA CUSTOMER -------------------------------------END-------------------------------------------
 	for {
+		fmt.Print("\033[H\033[2J") //cls
+
+		fmt.Println("Halo", DataCustomer.Nama, ", belanja apa hari ini ?")
+
+		if Keranjang.TotalHarga > 0 {
+			fmt.Println("\nBarang di keranjang kamu sekarang :")
+
+			w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+			for i, BarangKeranjang := range Keranjang.BarangDibeli {
+				//fmt.Fprintln(w, "----------------------------------------------------")
+				fmt.Fprintln(w, "-", BarangKeranjang.NamaBarang, "\t- Jumlah :", Keranjang.JumlahBeli[i], "\t- Total Harga :", uint(Keranjang.JumlahBeli[i])*BarangKeranjang.Harga)
+			}
+			w.Flush()
+			fmt.Println("\nTotal Semua barang :", Keranjang.TotalHarga)
+		}
+
+		//----------------------------------START TAMPIL BARANG-------------------------------------------
+		result, err := tc.model.GetBarang()
+
+		if err != nil {
+			fmt.Println("Terjadi ERROR")
+		} else {
+
+			fmt.Println("\n--------------")
+			fmt.Println("Daftar Barang")
+			fmt.Println("--------------")
+
+			w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+			//fmt.Fprintln(w, "----------------------------------------------------")
+			fmt.Fprintln(w, "| id\t| Nama Barang\t| Jenis Barang\t| Harga\t| Stok\t|\t")
+			fmt.Fprintln(w, "+\t+\t+\t+\t+\t+\t")
+			for _, databarang := range result {
+				fmt.Fprintln(w, "|", databarang.ID, "\t|", databarang.NamaBarang, "\t|", databarang.JenisBarang, "\t|", databarang.Harga, "\t|", databarang.Stock, "\t|\t")
+			}
+			w.Flush()
+		}
+		//----------------------------------END TAMPIL BARANG-------------------------------------------
+
 		//GET DATA BARANG ---------------------------------------START-----------------------------------------
 		for {
 			var temp string
@@ -186,7 +232,7 @@ func (tc *TransaksiController) Pembelian(cc *CustomerController, bc *BarangContr
 
 		}
 
-		DataBarang, err = bc.model.GetSatuBarang(idInput)
+		DataBarang, err = tc.model.GetSatuBarang(idInput)
 
 		if err != nil {
 			fmt.Println("Id yang anda masukkan tidak ada")
@@ -208,12 +254,45 @@ func (tc *TransaksiController) Pembelian(cc *CustomerController, bc *BarangContr
 				fmt.Scanln(&temp)
 				fmt.Println("- Masukkan angka yang valid")
 				continue
+			} else if JumlahBeli > int(DataBarang.Stock) {
+				fmt.Println("Jumlah pembelian melebihi stok yang tersedia, Harap input ulang")
+				continue
 			} else {
-				break
+				var BarangLain bool = true
+				for i, BarangKeranjang := range Keranjang.BarangDibeli {
+					if DataBarang.ID == BarangKeranjang.ID {
+						if Keranjang.JumlahBeli[i]+JumlahBeli > int(BarangKeranjang.Stock) {
+							fmt.Println("Jumlah pembelian melebihi stok yang tersedia, Harap input ulang")
+							BarangLain = false
+							break
+						} else if Keranjang.JumlahBeli[i]+JumlahBeli <= 0 {
+							Keranjang.BarangDibeli = append(Keranjang.BarangDibeli[:i], Keranjang.BarangDibeli[i+1:]...)
+							Keranjang.JumlahBeli = append(Keranjang.JumlahBeli[:i], Keranjang.JumlahBeli[i+1:]...)
+							BarangLain = false
+							fmt.Println("Barang berhasil dikeluarkan dari keranjang")
+							break
+						}
+						Keranjang.JumlahBeli[i] += JumlahBeli
+						Keranjang.TotalHarga += int(DataBarang.Harga) * JumlahBeli
+						fmt.Println("Barang berhasil ditambah ke keranjang")
+						BarangLain = false
+						break
+					}
+				}
+				if BarangLain && JumlahBeli > 0 {
+					Keranjang.BarangDibeli = append(Keranjang.BarangDibeli, DataBarang)
+					Keranjang.JumlahBeli = append(Keranjang.JumlahBeli, JumlahBeli)
+					Keranjang.TotalHarga += int(DataBarang.Harga) * JumlahBeli
+					fmt.Println("Barang berhasil ditambah ke keranjang")
+					break
+				} else if !BarangLain {
+					break
+				} else {
+					fmt.Println("- Masukkan angka yang valid2")
+					continue
+				}
 			}
 		}
-
-		Keranjang = append(Keranjang, DataBarang)
 
 		var confirm int
 		for {
@@ -232,53 +311,56 @@ func (tc *TransaksiController) Pembelian(cc *CustomerController, bc *BarangContr
 				continue
 			}
 		}
-		if confirm == 1 {
-			continue
-		} else {
+		if confirm == 2 {
 			break
+		} else if confirm == 3 {
+			return
 		}
+
 	}
+
 	//GET Input Jumlah Barang ----------------------------------End-------------------------------------------
-	// for _,  := range Keranjang {
 
-	// DataBarang.Stock -= uint(JumlahBeli)
+	DataTRX.IdUser = idUser
+	DataTRX.IdCustomer = &DataCustomer.ID
+	DataTRX.JenisTransaksi = "Pembelian"
+	DataTRX, err = tc.model.UpdateTransaksi(DataTRX)
+	if err != nil {
+		fmt.Println("terjadi masalah ketika update data Pembelian")
+		return
+	}
 
-	// DataBarang, err = bc.model.UpdateInfoBarang(DataBarang)
-	// if err != nil {
-	// 	fmt.Println("terjadi masalah ketika update Stock Barang")
-	// 	return
-	// }
+	for i, BarangTerjual := range Keranjang.BarangDibeli {
 
-	// newDataTrx.IdUser = idUser
-	// newDataTrx.JenisTransaksi = "Restock"
-	// newDataTrx, err = tc.model.UpdateTransaksi(newDataTrx)
-	// if err != nil {
-	// 	fmt.Println("terjadi masalah ketika update data Restock")
-	// 	return
-	// }
+		BarangTerjual.Stock -= uint(Keranjang.JumlahBeli[i])
+		BarangTerjual, err = tc.model.UpdateInfoBarang(BarangTerjual)
+		if err != nil {
+			fmt.Println("terjadi masalah ketika update Stock Barang")
+			return
+		}
+		DetailTRX.IdTransaksi = DataTRX.ID
+		DetailTRX.IdBarang = BarangTerjual.ID
+		DetailTRX.Qty = uint(Keranjang.JumlahBeli[i])
+		DetailTRX.TotalHarga = BarangTerjual.Harga * uint(Keranjang.JumlahBeli[i])
 
-	// newDataDTrx.IdTransaksi = newDataTrx.ID
-	// newDataDTrx.IdBarang = uint(idInput)
-	// newDataDTrx.Qty = uint(JumlahBeli)
-	// newDataDTrx.TotalHarga = DataBarang.Harga * uint(JumlahBeli)
+		DetailTRX, err = tc.model.UpdateDetailTransaksi(DetailTRX)
+		if err != nil {
+			fmt.Println("terjadi masalah ketika update detail data Pembelian")
+			return
+		}
 
-	// newDataDTrx, err = dtc.model.UpdateDetailTransaksi(newDataDTrx)
-	// if err != nil {
-	// 	fmt.Println("terjadi masalah ketika update detail data Restock")
-	// 	return
-	// }
+		DataTRX.TotalQty += DetailTRX.Qty
+		DataTRX.TotalHarga += DetailTRX.TotalHarga
+	}
 
-	// newDataTrx.TotalQty = newDataDTrx.Qty
-	// newDataTrx.TotalHarga = newDataDTrx.TotalHarga
+	DataTRX, err = tc.model.UpdateTransaksi(DataTRX)
+	if err != nil {
+		fmt.Println("terjadi masalah ketika update data Restock")
+		return
+	}
 
-	// newDataTrx, err = tc.model.UpdateTransaksi(newDataTrx)
-	// if err != nil {
-	// 	fmt.Println("terjadi masalah ketika update data Restock")
-	// 	return
-	// }
+	fmt.Print("\033[H\033[2J") //cls
 
-	// fmt.Print("\033[H\033[2J") //cls
-
-	// fmt.Println(DataBarang.NamaBarang, "berhasil Restock sebanyak", JumlahBeli, "unit")
+	// fmt.Println(BarangTerjual.NamaBarang, "berhasil Restock sebanyak", JumlahBeli, "unit")
 
 }
