@@ -15,17 +15,7 @@ func NewTransaksiController(m *model.TransaksiModel) *TransaksiController {
 	}
 }
 
-type DetailTransaksiController struct {
-	model *model.DetailTransaksiModel
-}
-
-func NewDetailTransaksiController(m *model.DetailTransaksiModel) *DetailTransaksiController {
-	return &DetailTransaksiController{
-		model: m,
-	}
-}
-
-func (tc *TransaksiController) RestockBarang(bc *BarangController, dtc *DetailTransaksiController, idUser uint) {
+func (tc *TransaksiController) RestockBarang(idUser uint) {
 
 	var newData model.Barang
 	var newDataTrx model.Transaksi
@@ -50,7 +40,7 @@ func (tc *TransaksiController) RestockBarang(bc *BarangController, dtc *DetailTr
 
 	}
 
-	newData, err := bc.model.GetSatuBarang(idInput)
+	newData, err := tc.model.GetSatuBarang(idInput)
 
 	if err != nil {
 		fmt.Println("Id yang anda masukkan tidak ada")
@@ -96,7 +86,7 @@ func (tc *TransaksiController) RestockBarang(bc *BarangController, dtc *DetailTr
 	if confirm == 1 {
 		newData.Stock += uint(TambahBarang)
 
-		newData, err := bc.model.UpdateInfoBarang(newData)
+		newData, err := tc.model.UpdateInfoBarang(newData)
 		if err != nil {
 			fmt.Println("terjadi masalah ketika update Stock Barang")
 			return
@@ -115,7 +105,7 @@ func (tc *TransaksiController) RestockBarang(bc *BarangController, dtc *DetailTr
 		newDataDTrx.Qty = uint(TambahBarang)
 		newDataDTrx.TotalHarga = newData.Harga * uint(TambahBarang)
 
-		newDataDTrx, err := dtc.model.UpdateDetailTransaksi(newDataDTrx)
+		newDataDTrx, err := tc.model.UpdateDetailTransaksi(newDataDTrx)
 		if err != nil {
 			fmt.Println("terjadi masalah ketika update detail data Restock")
 			return
