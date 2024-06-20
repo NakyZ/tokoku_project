@@ -55,7 +55,7 @@ func (bc *BarangController) TambahBarang(userID uint) (model.Barang, error) {
 		if confirm == 1 {
 			break
 		} else if confirm == 2 {
-			continue
+			continue 
 		} else if confirm == 3 {
 			fmt.Print("\033[H\033[2J") //cls
 			fmt.Println("Barang Batal Ditambahkan")
