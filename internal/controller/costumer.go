@@ -12,7 +12,7 @@ type CustomerController struct {
 	model *model.CustomerModel
 }
 
-func NewCustomerController(m *model.CustomerModel) *CustomerController  {
+func NewCustomerController(m *model.CustomerModel) *CustomerController {
 	return &CustomerController{
 		model: m,
 	}
@@ -33,8 +33,8 @@ func (cc *CustomerController) Register(userID uint) (model.Customer, error) {
 	scanner.Scan()
 	newData.Phone = scanner.Text()
 	result, err := cc.model.Register(newData)
-	if err != nil && !result { 
-		return model.Customer{}, errors.New("Terjadi kesalahan saat melakukan register")
+	if err != nil && !result {
+		return model.Customer{}, errors.New("terjadi kesalahan saat melakukan register")
 	}
 	return newData, nil
 }
