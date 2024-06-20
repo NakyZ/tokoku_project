@@ -29,3 +29,12 @@ func (cm *CustomerModel) Register(NewCustomer Customer) (bool, error) {
 	}
 	return true, nil
 }
+
+func (cm *CustomerModel) GetSatuCustomer(id int) (Customer, error) {
+	var result Customer
+	err := cm.db.First(&result, id).Error
+	if err != nil || cm.db.First(&result).RowsAffected == 0 {
+		return Customer{}, err
+	}
+	return result, nil
+}

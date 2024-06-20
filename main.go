@@ -18,8 +18,7 @@ func main() {
 		return
 	}
 
-	connection.AutoMigrate(&model.User{}, &model.Barang{}, &model.Transaksi{}, &model.DetailTransaksi{},&model.Customer{})
-
+	connection.AutoMigrate(&model.User{}, &model.Barang{}, &model.Transaksi{}, &model.DetailTransaksi{}, &model.Customer{})
 
 	var inputMenu int
 
@@ -99,10 +98,10 @@ func main() {
 				case 4:
 					fmt.Print("\033[H\033[2J") //cls
 					tc.RestockBarang(bc, dtc, data.ID)
-				case 5:
+				case 6:
 					fmt.Print("\033[H\033[2J") //cls
 					uc.Register()
-          case 6:
+				case 7:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
 				case 99:
@@ -143,7 +142,10 @@ func main() {
 				case 4:
 					fmt.Print("\033[H\033[2J") //cls
 					tc.RestockBarang(bc, dtc, data.ID)
-           case 6:
+				case 5:
+					fmt.Print("\033[H\033[2J") //cls
+					fmt.Println("Ini Fitur Pembelian, tapi belum selesai")
+				case 6:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
 				case 99:
