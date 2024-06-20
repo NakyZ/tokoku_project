@@ -18,7 +18,7 @@ func main() {
 		return
 	}
 
-	connection.AutoMigrate(&model.User{}, &model.Barang{})
+	connection.AutoMigrate(&model.User{}, &model.Barang{}, &model.Restock{})
 
 	var inputMenu int
 
@@ -27,6 +27,9 @@ func main() {
 
 	bm := model.NewBarangModel(connection)
 	bc := controller.NewBarangController(bm)
+
+	rm := model.NewRestockModel(connection)
+	rc := controller.NewRestockController(rm)
 
 	// tu := models.NewTodoModel(connection)
 	// tc := controllers.NewTodoController(tu)
@@ -78,6 +81,9 @@ func main() {
           uc.Register()
 				case 99:
 					isLogin = false
+				case 3:
+					rc.RestockBarang(data.ID)
+
         default :
 					fmt.Print("\033[H\033[2J") //cls
 					fmt.Print("Input anda salah atau fitur yang dipilih belum tersedia")
@@ -115,6 +121,8 @@ func main() {
 				fmt.Print("Masukkan input: ")
 				fmt.Scanln(&inputMenu2)
 				if inputMenu2 == 9 {
+					isLogin = false
+				}else if inputMenu2 == 3 {
 					isLogin = false
 				}
 				
