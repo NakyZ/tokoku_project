@@ -242,15 +242,15 @@ func (tc *TransaksiController) Pembelian(cc *CustomerController, bc *BarangContr
 				continue
 			}
 		}
-		if confirm== 1{
+		if confirm == 1 {
 			continue
-		} else{
+		} else {
 			break
 		}
 	}
 	//GET Input Jumlah Barang ----------------------------------End-------------------------------------------
-	for _,  := range Keranjang {
-		
+	// for _,  := range Keranjang {
+
 	// DataBarang.Stock -= uint(JumlahBeli)
 
 	// DataBarang, err = bc.model.UpdateInfoBarang(DataBarang)
