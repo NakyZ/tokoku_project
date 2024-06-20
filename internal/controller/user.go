@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"tokoku_project/internal/model"
 )
 
@@ -18,7 +20,13 @@ func NewUserController(m *model.UserModel) *UserController {
 
 func (uc *UserController) Login() (model.User, error) {
 	var username, password string
-	fmt.Print("\nMasukkan username : ")
+
+	fmt.Print("\033[H\033[2J") //cls
+
+	fmt.Print("----------------------")
+	fmt.Print("\nLogin\n")
+	fmt.Print("----------------------")
+	fmt.Print("\n\nMasukkan username : ")
 	fmt.Scanln(&username)
 	fmt.Print("Masukkan password : ")
 	fmt.Scanln(&password)
@@ -26,5 +34,35 @@ func (uc *UserController) Login() (model.User, error) {
 	if err != nil {
 		return model.User{}, errors.New("kombinasi username & password tidak ditemukan")
 	}
+
+	fmt.Print("\033[H\033[2J") //cls
+
+	fmt.Println("Login Berhasil")
 	return result, nil
+}
+
+func (uc *UserController) Register() (model.User, error) {
+	var newData model.User
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print("\033[H\033[2J") //cls
+	fmt.Println("----------------------------------")
+	fmt.Println("Tambah Pegawai")
+	fmt.Println("----------------------------------")
+	fmt.Print("\nMasukkan username Pegawai : ")
+	scanner.Scan()
+	newData.Username = scanner.Text()
+	fmt.Print("Masukkan Password : ")
+	scanner.Scan()
+	newData.Password = scanner.Text()
+	fmt.Print("Masukkan Nama Pegawai : ")
+	scanner.Scan()
+	newData.Nama = scanner.Text()
+	newData.IsAdmin = false
+	result, err := uc.model.Register(newData)
+	if err != nil && !result {
+		return model.User{}, errors.New("terjadi kesalahan saat melakukan register")
+	}
+	fmt.Print("\033[H\033[2J") //cls
+	fmt.Println(newData.Nama, "berhasil ditambahkan ke Daftar Pegawai")
+	return newData, nil
 }
