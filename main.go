@@ -18,12 +18,15 @@ func main() {
 		return
 	}
 
-	connection.AutoMigrate(&model.User{}, &model.Barang{}, &model.Transaksi{}, &model.DetailTransaksi{})
+	connection.AutoMigrate(&model.User{}, &model.Barang{}, &model.Transaksi{}, &model.DetailTransaksi{},&model.Customer{})
+
 
 	var inputMenu int
 
 	um := model.NewUserModel(connection)
 	uc := controller.NewUserController(um)
+	cm := model.NewCustomerModel(connection)
+	cc := controller.NewCustomerController(cm)
 
 	bm := model.NewBarangModel(connection)
 	bc := controller.NewBarangController(bm)
@@ -99,6 +102,9 @@ func main() {
 				case 5:
 					fmt.Print("\033[H\033[2J") //cls
 					uc.Register()
+          case 6:
+					fmt.Print("\033[H\033[2J") //cls
+					cc.Register(data.ID)
 				case 99:
 					fmt.Print("\033[H\033[2J") //cls
 					isLogin = false
@@ -137,6 +143,9 @@ func main() {
 				case 4:
 					fmt.Print("\033[H\033[2J") //cls
 					tc.RestockBarang(bc, dtc, data.ID)
+           case 6:
+					fmt.Print("\033[H\033[2J") //cls
+					cc.Register(data.ID)
 				case 99:
 					fmt.Print("\033[H\033[2J") //cls
 					isLogin = false
