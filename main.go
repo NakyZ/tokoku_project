@@ -24,6 +24,7 @@ func main() {
 
 	um := model.NewUserModel(connection)
 	uc := controller.NewUserController(um)
+
 	cm := model.NewCustomerModel(connection)
 	cc := controller.NewCustomerController(cm)
 
@@ -32,9 +33,6 @@ func main() {
 
 	tm := model.NewTransaksiModel(connection)
 	tc := controller.NewTransaksiController(tm)
-
-	dtm := model.NewDetailTransaksiModel(connection)
-	dtc := controller.NewDetailTransaksiController(dtm)
 
 	for inputMenu != 9 {
 		var temp string
@@ -97,11 +95,11 @@ func main() {
 					bc.UpdateInfoBarang(data.ID)
 				case 4:
 					fmt.Print("\033[H\033[2J") //cls
-					tc.RestockBarang(bc, dtc, data.ID)
-				case 6:
+					tc.RestockBarang(data.ID)
+				case 5:
 					fmt.Print("\033[H\033[2J") //cls
 					uc.Register()
-				case 7:
+				case 6:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
 				case 99:
@@ -141,10 +139,7 @@ func main() {
 					bc.UpdateInfoBarang(data.ID)
 				case 4:
 					fmt.Print("\033[H\033[2J") //cls
-					tc.RestockBarang(bc, dtc, data.ID)
-				case 5:
-					fmt.Print("\033[H\033[2J") //cls
-					fmt.Println("Ini Fitur Pembelian, tapi belum selesai")
+					tc.RestockBarang(data.ID)
 				case 6:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
