@@ -39,7 +39,7 @@ func (rc *RestockController) RestockBarang(userID uint) (model.Restock, error) {
 		fmt.Println("Jenis Barang : ", newData.RestockJenisBarang)
 		fmt.Println("Harga Barang : ", newData.Harga)
 		for {
-			fmt.Println("Apakah data restock yang ingin ditambahkan sudah benar ?\n[1] YA\n[2] EDIT ULANG DATA BARANG\n[3] BATAL TAMBAH BARANG")
+			fmt.Println("Apakah data restock yang ingin ditambahkan sudah benar ?\n[1] YA\n[2] EDIT ULANG DATA RESTOCK\n[3] BATAL RESTOCK BARANG")
 			fmt.Println("Input anda : ")
 			fmt.Scanln(&confirm)
 			if confirm > 0 || confirm < 4 {
