@@ -25,18 +25,8 @@ type TransaksiModel struct {
 	db *gorm.DB
 }
 
-type DetailTransaksiModel struct {
-	db *gorm.DB
-}
-
 func NewTransaksiModel(connection *gorm.DB) *TransaksiModel {
 	return &TransaksiModel{
-		db: connection,
-	}
-}
-
-func NewDetailTransaksiModel(connection *gorm.DB) *DetailTransaksiModel {
-	return &DetailTransaksiModel{
 		db: connection,
 	}
 }
@@ -50,11 +40,29 @@ func (tm *TransaksiModel) UpdateTransaksi(newTransaksi Transaksi) (Transaksi, er
 	return newTransaksi, nil
 }
 
-func (dtm *DetailTransaksiModel) UpdateDetailTransaksi(newDetailTransaksi DetailTransaksi) (DetailTransaksi, error) {
+func (tm *TransaksiModel) UpdateDetailTransaksi(newDetailTransaksi DetailTransaksi) (DetailTransaksi, error) {
 
-	err := dtm.db.Save(&newDetailTransaksi).Error
+	err := tm.db.Save(&newDetailTransaksi).Error
 	if err != nil {
 		return DetailTransaksi{}, err
 	}
 	return newDetailTransaksi, nil
+}
+
+func (tm *TransaksiModel) GetSatuBarang(id int) (Barang, error) {
+	var result Barang
+	err := tm.db.First(&result, id).Error
+	if err != nil || tm.db.First(&result).RowsAffected == 0 {
+		return Barang{}, err
+	}
+	return result, nil
+}
+
+func (tm *TransaksiModel) UpdateInfoBarang(newBarang Barang) (Barang, error) {
+
+	err := tm.db.Save(&newBarang).Error
+	if err != nil {
+		return Barang{}, err
+	}
+	return newBarang, nil
 }
