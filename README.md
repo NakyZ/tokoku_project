@@ -15,3 +15,14 @@
 ```
 
 ## Penjabaran Folder Program "tokoku_project"
+
+Test case
+
+Demo program 
+Login admin, 
+buat pegawai, 
+Login Pegawai, 
+buat customer, 
+buat transaksi, 
+tampilkan transaksi yang barusan dibuat, 
+tunjukkan kalo stok barang bisa berkurang

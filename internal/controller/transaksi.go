@@ -418,6 +418,7 @@ func (tc *TransaksiController) Pembelian(DataUser model.User) {
 	fmt.Println("--------------")
 	fmt.Println("----------------------------------------------------")
 	fmt.Println("ID TANSAKSI :", DataTRX.ID)
+	fmt.Println("Jenis Transaksi :", DataTRX.JenisTransaksi)
 	fmt.Println("Nama Petugas :", DataUser.Nama)
 	fmt.Println("Nama Customer :", DataCustomer.Nama)
 	fmt.Println("Tanggal Transaksi :", DataTRX.CreatedAt.Format("2006-01-02 15:04:05"))
@@ -430,7 +431,7 @@ func (tc *TransaksiController) Pembelian(DataUser model.User) {
 	}
 	w.Flush()
 	fmt.Println("\n----------------------------------------------------")
-	fmt.Println("Total Semua barang :", Keranjang.TotalHarga)
+	fmt.Println("Total Qty :", DataTRX.TotalQty, "\tTotal Harga :", DataTRX.TotalHarga)
 	fmt.Println("----------------------------------------------------")
 	//------------------------------------------- Nota Transaksi END --------------------------
 	fmt.Println("\nPilih Menu :")
@@ -461,6 +462,7 @@ func (tc *TransaksiController) GetNota() {
 	var nextMenu int
 	var DataCustomer model.Customer
 	var DataUser model.User
+
 	result, err := tc.model.GetTransaksi()
 
 	if err != nil {
@@ -534,6 +536,8 @@ func (tc *TransaksiController) GetNota() {
 			fmt.Println("Data Customer tidak ditemukan", err)
 			return
 		}
+	} else {
+		DataCustomer.Nama = "-"
 	}
 
 	//------------------------------------------- Nota Transaksi START --------------------------
@@ -543,6 +547,7 @@ func (tc *TransaksiController) GetNota() {
 	fmt.Println("--------------")
 	fmt.Println("----------------------------------------------------")
 	fmt.Println("ID TANSAKSI :", DataTransaksi.ID)
+	fmt.Println("Jenis Transaksi :", DataTransaksi.JenisTransaksi)
 	fmt.Println("Nama Pegawai :", DataUser.Nama)
 	fmt.Println("Nama Customer :", DataCustomer.Nama)
 	fmt.Println("Tanggal Transaksi :", DataTransaksi.CreatedAt.Format("2006-01-02 15:04:05"))
@@ -560,7 +565,7 @@ func (tc *TransaksiController) GetNota() {
 	}
 	w.Flush()
 	fmt.Println("\n----------------------------------------------------")
-	fmt.Println("Total Semua barang :", DataTransaksi.TotalQty, "\t", DataTransaksi.TotalHarga)
+	fmt.Println("Total Qty :", DataTransaksi.TotalQty, "\tTotal Harga :", DataTransaksi.TotalHarga)
 	fmt.Println("----------------------------------------------------")
 	//------------------------------------------- Nota Transaksi END --------------------------
 	fmt.Println("\nPilih Menu :")
