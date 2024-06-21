@@ -39,3 +39,12 @@ func (cm *CustomerModel) GetSatuCustomer(id int) (Customer, error) {
 	}
 	return result, nil
 }
+
+func (bm *CustomerModel) GetCustomer() ([]Customer, error) {
+	var result []Customer
+	err := bm.db.Find(&result).Error
+	if err != nil {
+		return []Customer{}, err
+	}
+	return result, nil
+}

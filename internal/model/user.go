@@ -45,3 +45,12 @@ func (um *UserModel) Register(newUser User) (bool, error) {
 	}
 	return true, nil
 }
+
+func (um *UserModel) GetUser() ([]User, error) {
+	var result []User
+	err := um.db.Find(&result).Error
+	if err != nil {
+		return []User{}, err
+	}
+	return result, nil
+}

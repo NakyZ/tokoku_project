@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"text/tabwriter"
 	"tokoku_project/internal/model"
 )
 
@@ -25,6 +26,27 @@ func (cc *CustomerController) Register(userID uint) (model.Customer, error) {
 	fmt.Println("----------------------------------")
 	fmt.Println("Tambah Pegawai")
 	fmt.Println("----------------------------------")
+	//----------------------------------START TAMPIL CUSTOMER-------------------------------------------
+	DataCustomer, err := cc.model.GetCustomer()
+
+	if err != nil {
+		fmt.Println("Terjadi ERROR")
+	} else {
+
+		fmt.Println("\n--------------")
+		fmt.Println("Daftar Customer")
+		fmt.Println("--------------")
+
+		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "| id\t| Nama Customer\t|")
+		fmt.Fprintln(w, "+\t+\t+")
+		for _, Customers := range DataCustomer {
+			fmt.Fprintln(w, "|", Customers.ID, "\t|", Customers.Nama, "\t|")
+		}
+		w.Flush()
+	}
+	//----------------------------------END TAMPIL CUSTOMER-------------------------------------------
 	fmt.Print("\nMasukkan Nama Customer : ")
 	scanner.Scan()
 	newData.Nama = scanner.Text()

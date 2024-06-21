@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"text/tabwriter"
 	"tokoku_project/internal/model"
 )
 
@@ -48,13 +49,35 @@ func (uc *UserController) Register() (model.User, error) {
 	fmt.Println("----------------------------------")
 	fmt.Println("Tambah Pegawai")
 	fmt.Println("----------------------------------")
-	fmt.Print("\nMasukkan username Pegawai : ")
+
+	//----------------------------------START TAMPIL CUSTOMER-------------------------------------------
+	DataUser, err := uc.model.GetUser()
+
+	if err != nil {
+		fmt.Println("Terjadi ERROR")
+	} else {
+
+		fmt.Println("\n--------------")
+		fmt.Println("Daftar User")
+		fmt.Println("--------------")
+
+		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "| id\t| Nama User\t|")
+		fmt.Fprintln(w, "+\t+\t+")
+		for _, Users := range DataUser {
+			fmt.Fprintln(w, "|", Users.ID, "\t|", Users.Nama, "\t|")
+		}
+		w.Flush()
+	}
+	//----------------------------------END TAMPIL CUSTOMER-------------------------------------------
+	fmt.Print("\nMasukkan username Pegawai Baru : ")
 	scanner.Scan()
 	newData.Username = scanner.Text()
-	fmt.Print("Masukkan Password : ")
+	fmt.Print("Masukkan Password Baru: ")
 	scanner.Scan()
 	newData.Password = scanner.Text()
-	fmt.Print("Masukkan Nama Pegawai : ")
+	fmt.Print("Masukkan Nama Pegawai Baru : ")
 	scanner.Scan()
 	newData.Nama = scanner.Text()
 	newData.IsAdmin = false

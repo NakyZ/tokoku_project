@@ -33,6 +33,27 @@ func (tc *TransaksiController) RestockBarang(idUser uint) {
 	fmt.Println("-----------------")
 	fmt.Println("Restock Barang")
 	fmt.Println("-----------------")
+	//----------------------------------START TAMPIL BARANG-------------------------------------------
+	result, err := tc.model.GetBarang()
+
+	if err != nil {
+		fmt.Println("Terjadi ERROR")
+	} else {
+
+		fmt.Println("\n--------------")
+		fmt.Println("Daftar Barang")
+		fmt.Println("--------------")
+
+		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "| id\t| Nama Barang\t| Jenis Barang\t| Harga\t| Stok\t|\t")
+		fmt.Fprintln(w, "+\t+\t+\t+\t+\t+\t")
+		for _, databarang := range result {
+			fmt.Fprintln(w, "|", databarang.ID, "\t|", databarang.NamaBarang, "\t|", databarang.JenisBarang, "\t|", databarang.Harga, "\t|", databarang.Stock, "\t|\t")
+		}
+		w.Flush()
+	}
+	//----------------------------------END TAMPIL BARANG-------------------------------------------
 
 	for {
 		var temp string
@@ -48,7 +69,7 @@ func (tc *TransaksiController) RestockBarang(idUser uint) {
 
 	}
 
-	newData, err := tc.model.GetSatuBarang(idInput)
+	newData, err = tc.model.GetSatuBarang(idInput)
 
 	if err != nil {
 		fmt.Println("Id yang anda masukkan tidak ada")
@@ -139,39 +160,64 @@ func (tc *TransaksiController) RestockBarang(idUser uint) {
 	}
 }
 
-func (tc *TransaksiController) Pembelian(idUser uint) {
+func (tc *TransaksiController) Pembelian(DataUser model.User) {
 
 	var Keranjang Keranjang
 	var DataBarang model.Barang
 	var DataCustomer model.Customer
 	var DataTRX model.Transaksi
 	var DetailTRX model.DetailTransaksi
-
+	var err error
 	var idInput, JumlahBeli int
 	fmt.Println("-----------------")
 	fmt.Println("Pembelian")
 	fmt.Println("-----------------")
+	//----------------------------------START TAMPIL CUSTOMER-------------------------------------------
+	result, err := tc.model.GetCustomer()
+
+	if err != nil {
+		fmt.Println("Terjadi ERROR")
+	} else {
+
+		fmt.Println("\n--------------")
+		fmt.Println("Daftar Customer")
+		fmt.Println("--------------")
+
+		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "| id\t| Nama Customer\t|")
+		fmt.Fprintln(w, "+\t+\t+")
+		for _, Customers := range result {
+			fmt.Fprintln(w, "|", Customers.ID, "\t|", Customers.Nama, "\t|")
+		}
+		w.Flush()
+	}
+	//----------------------------------END TAMPIL CUSTOMER-------------------------------------------
 
 	//GET DATA Customer ---------------------------------------START-----------------------------------------
 	for {
-		var temp string
-		fmt.Print("\nMasukkan ID Customer : ")
-		_, err := fmt.Scanln(&idInput)
-		if err != nil {
-			fmt.Scanln(&temp)
-			fmt.Println("- Masukkan input yang valid")
-			continue
-		} else {
-			break
+		for {
+			var temp string
+			fmt.Print("\nMasukkan ID Customer : ")
+			_, err := fmt.Scanln(&idInput)
+			if err != nil {
+				fmt.Scanln(&temp)
+				fmt.Println("- Masukkan input yang valid")
+				continue
+			} else {
+				break
+			}
+
 		}
 
-	}
+		DataCustomer, err = tc.model.GetSatuCustomer(idInput)
 
-	DataCustomer, err := tc.model.GetSatuCustomer(idInput)
-
-	if err != nil {
-		fmt.Println("Id yang anda masukkan tidak ada")
-		return
+		if err != nil {
+			fmt.Print("\033[H\033[2J") //cls
+			fmt.Println("Id Customer yang anda masukkan tidak ada")
+			continue
+		}
+		break
 	}
 	// fmt.Println("ID Customer ditemukan dengan data sebagai berikut :")
 	// fmt.Println("\nNama Customer : ", DataCustomer.Nama)
@@ -219,26 +265,28 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 
 		//GET DATA BARANG ---------------------------------------START-----------------------------------------
 		for {
-			var temp string
-			fmt.Print("\nMasukkan ID barang : ")
-			_, err := fmt.Scanln(&idInput)
-			if err != nil {
-				fmt.Scanln(&temp)
-				fmt.Println("- Masukkan input yang valid")
-				continue
-			} else {
-				break
+			for {
+				var temp string
+				fmt.Print("\nMasukkan ID barang : ")
+				_, err := fmt.Scanln(&idInput)
+				if err != nil {
+					fmt.Scanln(&temp)
+					fmt.Println("- Masukkan input yang valid")
+					continue
+				} else {
+					break
+				}
+
 			}
 
+			DataBarang, err = tc.model.GetSatuBarang(idInput)
+
+			if err != nil {
+				fmt.Println("Id Barang yang anda masukkan tidak ada")
+				continue
+			}
+			break
 		}
-
-		DataBarang, err = tc.model.GetSatuBarang(idInput)
-
-		if err != nil {
-			fmt.Println("Id yang anda masukkan tidak ada")
-			return
-		}
-
 		fmt.Println("ID barang ditemukan dengan data sebagai berikut :")
 		fmt.Println("\nNama Barang : ", DataBarang.NamaBarang)
 		fmt.Println("Jenis Barang : ", DataBarang.JenisBarang)
@@ -266,6 +314,7 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 							BarangLain = false
 							break
 						} else if Keranjang.JumlahBeli[i]+JumlahBeli <= 0 {
+							Keranjang.TotalHarga -= Keranjang.JumlahBeli[i] * int(BarangKeranjang.Harga)
 							Keranjang.BarangDibeli = append(Keranjang.BarangDibeli[:i], Keranjang.BarangDibeli[i+1:]...)
 							Keranjang.JumlahBeli = append(Keranjang.JumlahBeli[:i], Keranjang.JumlahBeli[i+1:]...)
 							BarangLain = false
@@ -274,7 +323,7 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 						}
 						Keranjang.JumlahBeli[i] += JumlahBeli
 						Keranjang.TotalHarga += int(DataBarang.Harga) * JumlahBeli
-						fmt.Println("Barang berhasil ditambah ke keranjang")
+						fmt.Println("Barang di keranjang berhasil diperbarui")
 						BarangLain = false
 						break
 					}
@@ -288,7 +337,7 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 				} else if !BarangLain {
 					break
 				} else {
-					fmt.Println("- Masukkan angka yang valid2")
+					fmt.Println("- Masukkan angka yang valid")
 					continue
 				}
 			}
@@ -299,7 +348,7 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 			fmt.Println("\nApakah ingin menambahkan barang lain ?\n[1] YA\n[2] TIDAK\n[3] BATAL BELI SEMUA BARANG")
 			fmt.Print("\nInput anda : ")
 			_, err := fmt.Scanln(&confirm)
-			if confirm > 0 || confirm < 4 {
+			if confirm > 0 && confirm < 4 {
 				break
 			} else if err != nil {
 				var temp string
@@ -321,7 +370,7 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 
 	//GET Input Jumlah Barang ----------------------------------End-------------------------------------------
 
-	DataTRX.IdUser = idUser
+	DataTRX.IdUser = DataUser.ID
 	DataTRX.IdCustomer = &DataCustomer.ID
 	DataTRX.JenisTransaksi = "Pembelian"
 	DataTRX, err = tc.model.UpdateTransaksi(DataTRX)
@@ -335,7 +384,7 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 		BarangTerjual.Stock -= uint(Keranjang.JumlahBeli[i])
 		BarangTerjual, err = tc.model.UpdateInfoBarang(BarangTerjual)
 		if err != nil {
-			fmt.Println("terjadi masalah ketika update Stock Barang")
+			fmt.Println("terjadi masalah ketika update Pembelian Barang")
 			return
 		}
 		DetailTRX.IdTransaksi = DataTRX.ID
@@ -355,12 +404,54 @@ func (tc *TransaksiController) Pembelian(idUser uint) {
 
 	DataTRX, err = tc.model.UpdateTransaksi(DataTRX)
 	if err != nil {
-		fmt.Println("terjadi masalah ketika update data Restock")
+		fmt.Println("terjadi masalah ketika update data Pembelian")
 		return
 	}
-
 	fmt.Print("\033[H\033[2J") //cls
 
-	// fmt.Println(BarangTerjual.NamaBarang, "berhasil Restock sebanyak", JumlahBeli, "unit")
+	fmt.Println("BARANG BERHASIL DIBELI :")
+
+	//------------------------------------------- Nota Transaksi START --------------------------
+
+	fmt.Println("\n--------------")
+	fmt.Println("NOTA TRANSAKSI")
+	fmt.Println("--------------")
+	fmt.Println("----------------------------------------------------")
+	fmt.Println("ID TANSAKSI :", DataTRX.ID)
+	fmt.Println("Nama Petugas :", DataUser.Nama)
+	fmt.Println("Nama Customer :", DataCustomer.Nama)
+	fmt.Println("----------------------------------------------------")
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	fmt.Fprintln(w, "Nama Barang\tJumlah\tTotal Harga")
+	for i, BarangKeranjang := range Keranjang.BarangDibeli {
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "-", BarangKeranjang.NamaBarang, "\t", Keranjang.JumlahBeli[i], "\t", uint(Keranjang.JumlahBeli[i])*BarangKeranjang.Harga)
+	}
+	w.Flush()
+	fmt.Println("\n----------------------------------------------------")
+	fmt.Println("Total Semua barang :", Keranjang.TotalHarga)
+	fmt.Println("----------------------------------------------------")
+	//------------------------------------------- Nota Transaksi END --------------------------
+	fmt.Println("\nPilih Menu :")
+	fmt.Println("[99] KEMBALI KE MENU UTAMA")
+	var nextMenu int
+	for {
+		var temp string
+		fmt.Print("\nMasukkan Input Anda : ")
+		_, err := fmt.Scanln(&nextMenu)
+		if err != nil {
+			fmt.Scanln(&temp)
+			fmt.Println("- Masukkan input yang valid")
+			continue
+		}
+		switch nextMenu {
+		case 99:
+			fmt.Print("\033[H\033[2J") //cls
+			return
+		default:
+			fmt.Println("- Masukkan input yang valid")
+		}
+
+	}
 
 }

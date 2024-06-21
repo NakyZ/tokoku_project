@@ -84,3 +84,12 @@ func (tm *TransaksiModel) GetBarang() ([]Barang, error) {
 	}
 	return result, nil
 }
+
+func (tm *TransaksiModel) GetCustomer() ([]Customer, error) {
+	var result []Customer
+	err := tm.db.Find(&result).Error
+	if err != nil {
+		return []Customer{}, err
+	}
+	return result, nil
+}
