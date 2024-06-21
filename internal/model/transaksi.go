@@ -93,3 +93,39 @@ func (tm *TransaksiModel) GetCustomer() ([]Customer, error) {
 	}
 	return result, nil
 }
+
+func (tm *TransaksiModel) GetTransaksi() ([]Transaksi, error) {
+	var result []Transaksi
+	err := tm.db.Find(&result).Error
+	if err != nil {
+		return []Transaksi{}, err
+	}
+	return result, nil
+}
+
+func (tm *TransaksiModel) GetSatuUser(id int) (User, error) {
+	var result User
+	err := tm.db.First(&result, id).Error
+	if err != nil || tm.db.First(&result).RowsAffected == 0 {
+		return User{}, err
+	}
+	return result, nil
+}
+
+func (tm *TransaksiModel) GetDetailTransaksi(id uint) ([]DetailTransaksi, error) {
+	var result []DetailTransaksi
+	err := tm.db.Where("id_transaksi = ?", id).Find(&result).Error
+	if err != nil {
+		return []DetailTransaksi{}, err
+	}
+	return result, nil
+}
+
+func (tm *TransaksiModel) GetSatuTransaksi(id uint) (Transaksi, error) {
+	var result Transaksi
+	err := tm.db.First(&result, id).Error
+	if err != nil || tm.db.First(&result).RowsAffected == 0 {
+		return Transaksi{}, err
+	}
+	return result, nil
+}

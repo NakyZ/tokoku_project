@@ -420,6 +420,7 @@ func (tc *TransaksiController) Pembelian(DataUser model.User) {
 	fmt.Println("ID TANSAKSI :", DataTRX.ID)
 	fmt.Println("Nama Petugas :", DataUser.Nama)
 	fmt.Println("Nama Customer :", DataCustomer.Nama)
+	fmt.Println("Tanggal Transaksi :", DataTRX.CreatedAt.Format("2006-01-02 15:04:05"))
 	fmt.Println("----------------------------------------------------")
 	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
 	fmt.Fprintln(w, "Nama Barang\tJumlah\tTotal Harga")
@@ -454,4 +455,133 @@ func (tc *TransaksiController) Pembelian(DataUser model.User) {
 
 	}
 
+}
+
+func (tc *TransaksiController) GetNota() {
+	var nextMenu int
+	var DataCustomer model.Customer
+	var DataUser model.User
+	result, err := tc.model.GetTransaksi()
+
+	if err != nil {
+		fmt.Println("Terjadi ERROR")
+	} else {
+		fmt.Print("\033[H\033[2J") //cls
+
+		fmt.Println("--------------")
+		fmt.Println("Daftar Transaksi")
+		fmt.Println("--------------")
+
+		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "| ID Transaksi\t| Tanggal Transaksi\t| Jenis Transaksi\t| Nama Pegawai\t| Nama Customer\t|\t")
+		fmt.Fprintln(w, "+\t+\t+\t+\t+\t+\t")
+		for _, dataTransaksi := range result {
+			DataUser, err := tc.model.GetSatuUser(int(dataTransaksi.IdUser))
+			if err != nil {
+				DataUser.Nama = "-"
+			}
+
+			if dataTransaksi.IdCustomer == nil {
+				DataCustomer.Nama = "-"
+			} else {
+				DataCustomer, err = tc.model.GetSatuCustomer(int(*dataTransaksi.IdCustomer))
+				if err != nil {
+					DataCustomer.Nama = "-"
+				}
+			}
+
+			fmt.Fprintln(w, "|", dataTransaksi.ID, "\t|", dataTransaksi.CreatedAt.Format("2006-01-02 15:04:05"), "\t|", dataTransaksi.JenisTransaksi, "\t|", DataUser.Nama, "\t|", DataCustomer.Nama, "\t|\t")
+		}
+		w.Flush()
+	}
+
+	for {
+		var temp string
+		fmt.Print("\nMasukkan ID Transaksi yang ingin dicetak Nota : ")
+		_, err := fmt.Scanln(&nextMenu)
+		if err != nil {
+			fmt.Scanln(&temp)
+			fmt.Println("- Masukkan input yang valid")
+			continue
+		}
+		break
+	}
+
+	DataTransaksi, err := tc.model.GetSatuTransaksi(uint(nextMenu))
+	if err != nil {
+		fmt.Print("\033[H\033[2J") //cls
+		fmt.Println("Data transaksi tidak ditemukan")
+		return
+	}
+
+	DetailTransaksi, err := tc.model.GetDetailTransaksi(uint(nextMenu))
+	if err != nil {
+		fmt.Print("\033[H\033[2J") //cls
+		fmt.Println("Data Detail transaksi tidak ditemukan", err)
+		return
+	}
+	DataUser, err = tc.model.GetSatuUser(int(DataTransaksi.IdUser))
+	if err != nil {
+		fmt.Print("\033[H\033[2J") //cls
+		fmt.Println("Data User tidak ditemukan", err)
+		return
+	}
+	if DataTransaksi.IdCustomer != nil {
+		DataCustomer, err = tc.model.GetSatuCustomer(int(*DataTransaksi.IdCustomer))
+		if err != nil {
+			fmt.Print("\033[H\033[2J") //cls
+			fmt.Println("Data Customer tidak ditemukan", err)
+			return
+		}
+	}
+
+	//------------------------------------------- Nota Transaksi START --------------------------
+	fmt.Print("\033[H\033[2J") //cls
+	fmt.Println("\n--------------")
+	fmt.Println("NOTA TRANSAKSI")
+	fmt.Println("--------------")
+	fmt.Println("----------------------------------------------------")
+	fmt.Println("ID TANSAKSI :", DataTransaksi.ID)
+	fmt.Println("Nama Pegawai :", DataUser.Nama)
+	fmt.Println("Nama Customer :", DataCustomer.Nama)
+	fmt.Println("Tanggal Transaksi :", DataTransaksi.CreatedAt.Format("2006-01-02 15:04:05"))
+	fmt.Println("----------------------------------------------------")
+	w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+	fmt.Fprintln(w, "Nama Barang\tJumlah\tTotal Harga")
+	for _, BarangKeranjang := range DetailTransaksi {
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		Barang, err := tc.model.GetSatuBarang(int(BarangKeranjang.IdBarang))
+		if err != nil {
+			fmt.Println("Terjadi masalah dalam pengambilan data barang")
+			return
+		}
+		fmt.Fprintln(w, "-", Barang.NamaBarang, "\t", BarangKeranjang.Qty, "\t", BarangKeranjang.TotalHarga)
+	}
+	w.Flush()
+	fmt.Println("\n----------------------------------------------------")
+	fmt.Println("Total Semua barang :", DataTransaksi.TotalQty, "\t", DataTransaksi.TotalHarga)
+	fmt.Println("----------------------------------------------------")
+	//------------------------------------------- Nota Transaksi END --------------------------
+	fmt.Println("\nPilih Menu :")
+	fmt.Println("[99] KEMBALI KE MENU UTAMA")
+
+	for {
+		var temp string
+		fmt.Print("\nMasukkan Input Anda : ")
+		_, err := fmt.Scanln(&nextMenu)
+		if err != nil {
+			fmt.Scanln(&temp)
+			fmt.Println("- Masukkan input yang valid")
+			continue
+		}
+		switch nextMenu {
+		case 99:
+			fmt.Print("\033[H\033[2J") //cls
+			return
+		default:
+			fmt.Println("- Masukkan input yang valid")
+		}
+
+	}
 }
