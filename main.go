@@ -50,10 +50,12 @@ func main() {
 			fmt.Println("Input salah, silahkan coba lagi")
 			continue
 		}
+
 		if inputMenu == 1 {
 
 			data, err := uc.Login()
 			if err != nil {
+				fmt.Print("\033[H\033[2J") //cls
 				fmt.Println("Terjadi error pada saat login, error: ", err.Error())
 				continue
 			}
@@ -134,7 +136,14 @@ func main() {
 				fmt.Println("[7]. Cetak Nota Transaksi")
 				fmt.Println("\n[99]. Keluar")
 				fmt.Print("\nMasukkan input: ")
-				fmt.Scanln(&inputMenu2)
+
+				_, err := fmt.Scanln(&inputMenu2)
+				if err != nil {
+					fmt.Scanln(&temp)
+					fmt.Print("\033[H\033[2J") //cls
+					fmt.Println("Input salah, silahkan coba lagi")
+					continue
+				}
 				switch inputMenu2 {
 				case 1:
 					bc.TambahBarang(data.ID)
