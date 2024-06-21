@@ -66,3 +66,30 @@ func (tm *TransaksiModel) UpdateInfoBarang(newBarang Barang) (Barang, error) {
 	}
 	return newBarang, nil
 }
+
+func (tm *TransaksiModel) GetSatuCustomer(id int) (Customer, error) {
+	var result Customer
+	err := tm.db.First(&result, id).Error
+	if err != nil || tm.db.First(&result).RowsAffected == 0 {
+		return Customer{}, err
+	}
+	return result, nil
+}
+
+func (tm *TransaksiModel) GetBarang() ([]Barang, error) {
+	var result []Barang
+	err := tm.db.Find(&result).Error
+	if err != nil {
+		return []Barang{}, err
+	}
+	return result, nil
+}
+
+func (tm *TransaksiModel) GetCustomer() ([]Customer, error) {
+	var result []Customer
+	err := tm.db.Find(&result).Error
+	if err != nil {
+		return []Customer{}, err
+	}
+	return result, nil
+}

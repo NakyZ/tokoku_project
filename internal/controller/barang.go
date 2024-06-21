@@ -23,23 +23,46 @@ func (bc *BarangController) TambahBarang(userID uint) (model.Barang, error) {
 	var newData model.Barang
 	var confirm int
 	scanner := bufio.NewScanner(os.Stdin)
+
 	fmt.Print("\033[H\033[2J") //cls
 	for {
 
 		fmt.Println("----------------------------------")
 		fmt.Println("Tambah Barang")
 		fmt.Println("----------------------------------")
-		fmt.Print("\nMasukkan Nama Barang : ")
+
+		//----------------------------------START TAMPIL BARANG-------------------------------------------
+		result, err := bc.model.GetBarang()
+
+		if err != nil {
+			fmt.Println("Terjadi ERROR")
+		} else {
+
+			fmt.Println("\n--------------")
+			fmt.Println("Daftar Barang")
+			fmt.Println("--------------")
+
+			w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+			//fmt.Fprintln(w, "----------------------------------------------------")
+			fmt.Fprintln(w, "| id\t| Nama Barang\t| Jenis Barang\t| Harga\t| Stok\t|\t")
+			fmt.Fprintln(w, "+\t+\t+\t+\t+\t+\t")
+			for _, databarang := range result {
+				fmt.Fprintln(w, "|", databarang.ID, "\t|", databarang.NamaBarang, "\t|", databarang.JenisBarang, "\t|", databarang.Harga, "\t|", databarang.Stock, "\t|\t")
+			}
+			w.Flush()
+		}
+		//----------------------------------END TAMPIL BARANG-------------------------------------------
+		fmt.Print("\nMasukkan Nama Barang Baru : ")
 		scanner.Scan() // use `for scanner.Scan()` to keep reading
 		newData.NamaBarang = scanner.Text()
 
-		fmt.Print("Masukkan Jenis Barang : ")
+		fmt.Print("Masukkan Jenis Barang Baru : ")
 		scanner.Scan() // use `for scanner.Scan()` to keep reading
 		newData.JenisBarang = scanner.Text()
 
 		for {
 			var temp string
-			fmt.Print("Masukkan Harga Barang : ")
+			fmt.Print("Masukkan Harga Barang Baru : ")
 			_, err := fmt.Scanln(&newData.Harga)
 			if err != nil {
 				fmt.Scanln(&temp)
@@ -142,7 +165,27 @@ func (bc *BarangController) UpdateInfoBarang(idUser uint) {
 	fmt.Println("-----------------")
 	fmt.Println("Edit Data Barang")
 	fmt.Println("-----------------")
+	//----------------------------------START TAMPIL BARANG-------------------------------------------
+	result, err := bc.model.GetBarang()
 
+	if err != nil {
+		fmt.Println("Terjadi ERROR")
+	} else {
+
+		fmt.Println("\n--------------")
+		fmt.Println("Daftar Barang")
+		fmt.Println("--------------")
+
+		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		//fmt.Fprintln(w, "----------------------------------------------------")
+		fmt.Fprintln(w, "| id\t| Nama Barang\t| Jenis Barang\t| Harga\t| Stok\t|\t")
+		fmt.Fprintln(w, "+\t+\t+\t+\t+\t+\t")
+		for _, databarang := range result {
+			fmt.Fprintln(w, "|", databarang.ID, "\t|", databarang.NamaBarang, "\t|", databarang.JenisBarang, "\t|", databarang.Harga, "\t|", databarang.Stock, "\t|\t")
+		}
+		w.Flush()
+	}
+	//----------------------------------END TAMPIL BARANG-------------------------------------------
 	for {
 		var temp string
 		fmt.Print("\nMasukkan ID barang : ")
@@ -157,7 +200,7 @@ func (bc *BarangController) UpdateInfoBarang(idUser uint) {
 
 	}
 
-	newData, err := bc.model.GetSatuBarang(idInput)
+	newData, err = bc.model.GetSatuBarang(idInput)
 
 	if err != nil {
 		fmt.Println("Id yang anda masukkan tidak ada")

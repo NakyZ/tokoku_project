@@ -40,8 +40,8 @@ func main() {
 		fmt.Println("Selamat Datang di Aplikasi TOKOKU")
 		fmt.Println("----------------------------------")
 		fmt.Println("\nPilih menu")
-		fmt.Println("\n1. Login")
-		fmt.Println("9. Keluar")
+		fmt.Println("\n[1]. Login")
+		fmt.Println("[9]. Keluar")
 		fmt.Print("\nMasukkan input: ")
 		_, err := fmt.Scanln(&inputMenu)
 		if err != nil {
@@ -66,15 +66,14 @@ func main() {
 				fmt.Println("----------------------------------")
 				fmt.Println("Selamat datang", data.Nama, ",")
 				fmt.Println("\nPilih menu")
-				fmt.Println("1. Tambah Barang")
-				fmt.Println("2. Tampilkan Daftar Barang")
-				fmt.Println("3. Edit Informasi Barang")
-				fmt.Println("4. Restock Barang")
-				fmt.Println("5. Pembelian")
-				fmt.Println("6. Tambah Pegawai")
-				fmt.Println("7. Tambah Customer")
-				fmt.Println("8. Kurangi Stok (Opsional)")
-				fmt.Println("\n99. Keluar")
+				fmt.Println("[1]. Tambah Barang")
+				fmt.Println("[2]. Tampilkan Daftar Barang")
+				fmt.Println("[3]. Edit Informasi Barang")
+				fmt.Println("[4]. Restock Barang")
+				fmt.Println("[5]. Pembelian")
+				fmt.Println("[6]. Tambah Pegawai")
+				fmt.Println("[7]. Tambah Customer")
+				fmt.Println("\n[99]. Keluar")
 				fmt.Print("\nMasukkan input: ")
 
 				_, err := fmt.Scanln(&inputMenu2)
@@ -98,8 +97,11 @@ func main() {
 					tc.RestockBarang(data.ID)
 				case 5:
 					fmt.Print("\033[H\033[2J") //cls
-					uc.Register()
+					tc.Pembelian(data)
 				case 6:
+					fmt.Print("\033[H\033[2J") //cls
+					uc.Register()
+				case 7:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
 				case 99:
@@ -119,14 +121,13 @@ func main() {
 				fmt.Println("----------------------------------")
 				fmt.Println("\nSelamat datang", data.Nama, ",")
 				fmt.Println("\nPilih menu")
-				fmt.Println("1. Tambah Barang")
-				fmt.Println("2. Tampilkan Daftar Barang")
-				fmt.Println("3. Edit Informasi Barang")
-				fmt.Println("4. Restock Barang")
-				fmt.Println("5. Pembelian")
-				fmt.Println("6. Tambah Customer")
-				fmt.Println("7. Kurangi Stok (Opsional)")
-				fmt.Println("99. Keluar")
+				fmt.Println("[1]. Tambah Barang")
+				fmt.Println("[2]. Tampilkan Daftar Barang")
+				fmt.Println("[3]. Edit Informasi Barang")
+				fmt.Println("[4]. Restock Barang")
+				fmt.Println("[5]. Pembelian")
+				fmt.Println("[6]. Tambah Customer")
+				fmt.Println("\n[99]. Keluar")
 				fmt.Print("\nMasukkan input: ")
 				fmt.Scanln(&inputMenu2)
 				switch inputMenu2 {
@@ -140,6 +141,9 @@ func main() {
 				case 4:
 					fmt.Print("\033[H\033[2J") //cls
 					tc.RestockBarang(data.ID)
+				case 5:
+					fmt.Print("\033[H\033[2J") //cls
+					tc.Pembelian(data)
 				case 6:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)

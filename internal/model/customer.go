@@ -4,10 +4,11 @@ import "gorm.io/gorm"
 
 type Customer struct {
 	gorm.Model
-	Email     string `gorm:"type:varchar(50)"`
-	Nama      string `gorm:"type:varchar(50)"`
-	Phone     string `gorm:"type:varchar(50)"`
-	CreatedBy uint
+	Email      string `gorm:"type:varchar(50)"`
+	Nama       string `gorm:"type:varchar(50)"`
+	Phone      string `gorm:"type:varchar(50)"`
+	CreatedBy  uint
+	Transaksis []Transaksi `gorm:"foreignKey:IdCustomer"`
 	// BirthDate time.Time `gorm:"type:date"`
 	// Todos     []Todo    `gorm:"foreignKey:Owner"`
 }
@@ -28,4 +29,22 @@ func (cm *CustomerModel) Register(NewCustomer Customer) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func (cm *CustomerModel) GetSatuCustomer(id int) (Customer, error) {
+	var result Customer
+	err := cm.db.First(&result, id).Error
+	if err != nil || cm.db.First(&result).RowsAffected == 0 {
+		return Customer{}, err
+	}
+	return result, nil
+}
+
+func (bm *CustomerModel) GetCustomer() ([]Customer, error) {
+	var result []Customer
+	err := bm.db.Find(&result).Error
+	if err != nil {
+		return []Customer{}, err
+	}
+	return result, nil
 }
