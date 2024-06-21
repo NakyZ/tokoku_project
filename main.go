@@ -73,6 +73,7 @@ func main() {
 				fmt.Println("[5]. Pembelian")
 				fmt.Println("[6]. Tambah Pegawai")
 				fmt.Println("[7]. Tambah Customer")
+				fmt.Println("[8]. Cetak Nota Transaksi")
 				fmt.Println("\n[99]. Keluar")
 				fmt.Print("\nMasukkan input: ")
 
@@ -104,6 +105,9 @@ func main() {
 				case 7:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
+				case 8:
+					fmt.Print("\033[H\033[2J") //cls
+					tc.GetNota()
 				case 99:
 					fmt.Print("\033[H\033[2J") //cls
 					isLogin = false
@@ -127,6 +131,7 @@ func main() {
 				fmt.Println("[4]. Restock Barang")
 				fmt.Println("[5]. Pembelian")
 				fmt.Println("[6]. Tambah Customer")
+				fmt.Println("[7]. Cetak Nota Transaksi")
 				fmt.Println("\n[99]. Keluar")
 				fmt.Print("\nMasukkan input: ")
 				fmt.Scanln(&inputMenu2)
@@ -147,6 +152,9 @@ func main() {
 				case 6:
 					fmt.Print("\033[H\033[2J") //cls
 					cc.Register(data.ID)
+				case 7:
+					fmt.Print("\033[H\033[2J") //cls
+					tc.GetNota()
 				case 99:
 					fmt.Print("\033[H\033[2J") //cls
 					isLogin = false
